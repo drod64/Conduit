@@ -8,6 +8,7 @@ class World {
 private:
     // &engine
     entt::registry          m_registry;
+    // systems
     entt::dispatcher        m_events;
     // commandBuffer
 

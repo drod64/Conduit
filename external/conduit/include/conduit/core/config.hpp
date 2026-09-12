@@ -1,5 +1,6 @@
 #ifndef CONDUIT_CONFIG_HPP
 #define CONDUIT_CONFIG_HPP
+#include <cstddef>
 
 namespace conduit::config {
     #define CONDUIT_ALIGN_16 alignas(16)

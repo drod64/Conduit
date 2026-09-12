@@ -2,7 +2,7 @@
 
 void conduit::InputTester::test()
 {
-    conduit::Input<Action> input;
+    conduit::ActionMap<Action> actions(m_input);
 
     // Create bindings.
     conduit::Binding forward_wasd(KEY_W, InputDevice::KEYBOARD, InputControlType::BUTTON);
@@ -22,16 +22,16 @@ void conduit::InputTester::test()
     conduit::Binding quit(KEY_Q, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
     // Bind actions to bindings.
-    input.bind(Action::FORWARD, forward_wasd);
-    input.bind(Action::FORWARD, forward_keys);
-    input.bind(Action::LEFT, left_wasd);
-    input.bind(Action::LEFT, left_keys);
-    input.bind(Action::BACKWARD, backward_wasd);
-    input.bind(Action::BACKWARD, backward_keys);
-    input.bind(Action::RIGHT, right_wasd);
-    input.bind(Action::RIGHT, right_keys);
-    input.bind(Action::JUMP, jump);
-    input.bind(Action::QUIT, quit);
+    actions.bind(Action::FORWARD, forward_wasd);
+    actions.bind(Action::FORWARD, forward_keys);
+    actions.bind(Action::LEFT, left_wasd);
+    actions.bind(Action::LEFT, left_keys);
+    actions.bind(Action::BACKWARD, backward_wasd);
+    actions.bind(Action::BACKWARD, backward_keys);
+    actions.bind(Action::RIGHT, right_wasd);
+    actions.bind(Action::RIGHT, right_keys);
+    actions.bind(Action::JUMP, jump);
+    actions.bind(Action::QUIT, quit);
 
     // Initialize window
     InitWindow(100, 100, "Conduit");
@@ -42,34 +42,38 @@ void conduit::InputTester::test()
     {
         PollInputEvents();
 
-        input.poll();
+        // Poll hardware.
+        m_input.poll();
+        
+        // Poll actions.
+        actions.poll();
 
-        if (input.isDown(Action::FORWARD))
+        if (actions.isDown(Action::FORWARD))
         {
             std::cout << "Moving forward\n";
         }
         
-        if (input.isDown(Action::BACKWARD))
+        if (actions.isDown(Action::BACKWARD))
         {
             std::cout << "Moving backward\n";
         }
 
-        if (input.isDown(Action::LEFT))
+        if (actions.isDown(Action::LEFT))
         {
             std::cout << "Moving left\n";
         }
         
-        if (input.isDown(Action::RIGHT))
+        if (actions.isDown(Action::RIGHT))
         {
             std::cout << "Moving right\n";
         }
 
-        if (input.wasPressed(Action::JUMP))
+        if (actions.wasPressed(Action::JUMP))
         {
             std::cout << "Jumped\n";
         }
 
-        if (input.wasReleased(Action::QUIT))
+        if (actions.wasReleased(Action::QUIT))
         {
             CloseWindow();
         }
