@@ -5,9 +5,16 @@
 
 namespace conduit {
 struct Binding {
+
+    Binding(uint16 control, InputDevice device, InputControlType type) :
+    control(control),
+    device(device),
+    type(type)
+    {}
+    
+    uint16              control;
     InputDevice         device;
     InputControlType    type;
-    uint16              control;
 }; // struct Binding
 } // namespace conduit
 

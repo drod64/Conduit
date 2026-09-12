@@ -5,43 +5,33 @@ void conduit::InputTester::test()
     conduit::Input<Action> input;
 
     // Create bindings.
-    conduit::Binding left;
-    left.control = KEY_A;
-    left.device = conduit::InputDevice::KEYBOARD;
-    left.type = conduit::InputControlType::BUTTON;
+    conduit::Binding forward_wasd(KEY_W, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding forward_keys(KEY_UP, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding right;
-    right.control = KEY_D;
-    right.device = conduit::InputDevice::KEYBOARD;
-    right.type = conduit::InputControlType::BUTTON;
+    conduit::Binding left_wasd(KEY_A, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding left_keys(KEY_LEFT, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding forward;
-    forward.control = KEY_W;
-    forward.device = conduit::InputDevice::KEYBOARD;
-    forward.type = conduit::InputControlType::BUTTON;
+    conduit::Binding backward_wasd(KEY_S, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding backward_keys(KEY_DOWN, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding backward;
-    backward.control = KEY_S;
-    backward.device = conduit::InputDevice::KEYBOARD;
-    backward.type = conduit::InputControlType::BUTTON;
+    conduit::Binding right_wasd(KEY_D, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding right_keys(KEY_RIGHT, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding jump;
-    jump.control = KEY_SPACE;
-    jump.device = conduit::InputDevice::KEYBOARD;
-    jump.type = conduit::InputControlType::BUTTON;
+    conduit::Binding jump(KEY_SPACE, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding quit;
-    quit.control = KEY_Q;
-    quit.device = conduit::InputDevice::KEYBOARD;
-    quit.type = conduit::InputControlType::BUTTON;
+    conduit::Binding quit(KEY_Q, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
     // Bind actions to bindings.
-    input.bind(Action::LEFT, left);
-    input.bind(Action::RIGHT, right);
-    input.bind(Action::QUIT, quit);
-    input.bind(Action::FORWARD, forward);
-    input.bind(Action::BACKWARD, backward);
+    input.bind(Action::FORWARD, forward_wasd);
+    input.bind(Action::FORWARD, forward_keys);
+    input.bind(Action::LEFT, left_wasd);
+    input.bind(Action::LEFT, left_keys);
+    input.bind(Action::BACKWARD, backward_wasd);
+    input.bind(Action::BACKWARD, backward_keys);
+    input.bind(Action::RIGHT, right_wasd);
+    input.bind(Action::RIGHT, right_keys);
     input.bind(Action::JUMP, jump);
+    input.bind(Action::QUIT, quit);
 
     // Initialize window
     InitWindow(100, 100, "Conduit");
