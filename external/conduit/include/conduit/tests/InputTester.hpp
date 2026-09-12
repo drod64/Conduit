@@ -8,8 +8,8 @@ namespace conduit {
 class InputTester {
 public:
     enum class Action : conduit::uint16 {
-        JUMP, SHOOT, WALK, QUIT
-    }; 
+        FORWARD, BACKWARD, LEFT, RIGHT, JUMP, QUIT
+    };
 
     void test();
 }; // class InputTester
