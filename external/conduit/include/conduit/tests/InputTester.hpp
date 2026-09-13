@@ -2,8 +2,8 @@
 #define CONDUIT_INPUT_TESTER_HPP
 #include <iostream>
 #include <conduit/core/primitives.hpp>
-#include <conduit/framework/Input.hpp>
-#include <conduit/framework/ActionMap.hpp>
+#include <conduit/framework/input/Input.hpp>
+#include <conduit/framework/input/ActionMap.hpp>
 
 namespace conduit {
 class InputTester {

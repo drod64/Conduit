@@ -2,9 +2,9 @@
 #define CONDUIT_INPUT_HPP
 #include <raylib.h>
 #include <conduit/core/config.hpp>
-#include <conduit/framework/helpers/KeyboardState.hpp>
-#include <conduit/framework/helpers/MouseState.hpp>
-#include <conduit/framework/GamepadInput.hpp>
+#include <conduit/framework/input/keyboard/KeyboardState.hpp>
+#include <conduit/framework/input/mouse/MouseState.hpp>
+#include <conduit/framework/input/gamepad/GamepadInput.hpp>
 
 namespace conduit {
 class Input {

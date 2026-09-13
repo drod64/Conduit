@@ -1,4 +1,4 @@
-#include <conduit/framework/Input.hpp>
+#include <conduit/framework/input/Input.hpp>
 
 void conduit::Input::pollKeyboard()
 {

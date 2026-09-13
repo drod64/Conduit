@@ -1,7 +1,7 @@
 #ifndef CONDUIT_BINDING_HPP
 #define CONDUIT_BINDING_HPP
-#include <conduit/framework/helpers/InputDevice.hpp>
-#include <conduit/framework/helpers/InputControlType.hpp>
+#include <conduit/framework/input/InputDevice.hpp>
+#include <conduit/framework/input/InputControlType.hpp>
 
 namespace conduit {
 struct Binding {

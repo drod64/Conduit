@@ -1,4 +1,4 @@
-#include <conduit/framework/GamepadInput.hpp>
+#include <conduit/framework/input/gamepad/GamepadInput.hpp>
 
 void conduit::GamepadInput::pollConnection(int gamepad, GamepadState &state)
 {

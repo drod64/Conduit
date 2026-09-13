@@ -1,0 +1,25 @@
+#ifndef CONDUIT_GAME_PAD_BUTTON_HPP
+#define CONDUIT_GAME_PAD_BUTTON_HPP
+#include <conduit/core/primitives.hpp>
+
+namespace conduit {
+enum class GamepadButton : uint16 {
+    A,
+    B,
+    X,
+    Y,
+    LEFT_BUMPER,
+    RIGHT_BUMPER,
+    BACK,
+    START,
+    GUIDE,
+    LEFT_STICK,
+    RIGHT_STICK,
+    D_PAD_UP,
+    D_PAD_DOWN,
+    D_PAD_RIGHT,
+    D_PAD_LEFT
+}; // enum class GamepadButton
+} // namespace conduit
+
+#endif // CONDUIT_GAME_PAD_BUTTON_HPP

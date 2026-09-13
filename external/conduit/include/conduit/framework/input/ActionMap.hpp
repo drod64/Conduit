@@ -2,8 +2,8 @@
 #define CONDUIT_ACTION_MAP_HPP
 #include <conduit/core/containers/unordered_map.hpp>
 #include <conduit/core/containers/vector.hpp>
-#include <conduit/framework/helpers/ActionState.hpp>
-#include <conduit/framework/helpers/Binding.hpp>
+#include <conduit/framework/input/ActionState.hpp>
+#include <conduit/framework/input/Binding.hpp>
 
 namespace conduit {
 // Forward declaration
