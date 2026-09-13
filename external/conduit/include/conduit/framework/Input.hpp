@@ -1,21 +1,23 @@
 #ifndef CONDUIT_INPUT_HPP
 #define CONDUIT_INPUT_HPP
 #include <raylib.h>
+#include <conduit/core/config.hpp>
 #include <conduit/framework/helpers/KeyboardState.hpp>
 #include <conduit/framework/helpers/MouseState.hpp>
-#include <conduit/framework/helpers/GamepadState.hpp>
+#include <conduit/framework/GamepadInput.hpp>
 
 namespace conduit {
 class Input {
 private:
-    KeyboardState                               m_keyboard_states;
-    MouseState                                  m_mouse_states;
-    GamepadState                                m_gamepad_states;
+    KeyboardState                               m_keyboard_state;
+    MouseState                                  m_mouse_state;
+    GamepadInput                                m_gamepads;
 
-    /**
-     * Updates the physical states of the input sources for the current frame
-     */
-    void updatePhysicalStates();
+    void pollKeyboard();
+
+    void pollMouse();
+
+    void pollGamepads();
 
 public:
     Input() = default;
@@ -37,9 +39,9 @@ public:
     const MouseState& mouse() const;
 
     /**
-     * @return the state of the gamepad for the current frame
+     * @return the state of the gamepads for the current frame
      */
-    const GamepadState& gamepad() const;
+    const GamepadInput& gamepads() const;
 }; // class Input
 } // namespace conduit
 

@@ -8,9 +8,9 @@
 namespace conduit {
 struct GamepadState {
     bool connected = false;
-    bitset<config::GAMEPAD_BUTTON_COUNT> current;
-    bitset<config::GAMEPAD_BUTTON_COUNT> previous;
-    array<real, config::GAMEPAD_AXIS_COUNT> axes;
+    bitset<config::GAMEPAD_BUTTON_COUNT> current{};
+    bitset<config::GAMEPAD_BUTTON_COUNT> previous{};
+    array<real, config::GAMEPAD_AXIS_COUNT> axes{};
 }; // struct GamepadState
 } // namespace conduit
 

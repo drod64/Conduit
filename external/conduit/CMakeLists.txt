@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(CONDUIT)
 
 set(SOURCE_FILES
+    src/framework/GamepadInput.cpp
     src/framework/Input.cpp
     src/framework/Time.cpp
     

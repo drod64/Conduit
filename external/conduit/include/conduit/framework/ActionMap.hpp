@@ -16,8 +16,9 @@ private:
     unordered_map<Action, vector<Binding>>      m_bindings;
     unordered_map<Action, ActionState>          m_action_states;
 
-    real axisValue();
     void updateActionStates();
+    void queryAxes(const Binding& binding, ActionState &state);
+    void queryButtons(const Binding &binding, ActionState &state);
 
 public:
     ActionMap(const Input &input);
@@ -36,13 +37,6 @@ public:
 
 // Implementation
 template <typename Action>
-inline conduit::real conduit::ActionMap<Action>::axisValue()
-{
-    // TODO
-    return static_cast<real>(0);
-}
-
-template <typename Action>
 inline void conduit::ActionMap<Action>::updateActionStates()
 {
     for (const auto &[action, bindings] : m_bindings)
@@ -53,50 +47,75 @@ inline void conduit::ActionMap<Action>::updateActionStates()
 
         for (const auto &binding : bindings)
         {
-            // Local variables that tell us whether the current action is...
-            bool down = false;
-            bool pressed = false;
-            bool released = false;
-
-            // Local variables that let us know the physical state of the binding
-            bool cur_binding_state = false;
-            bool prev_binding_state = false;
-
-            // Acquire current and previous physical state of the binding (depending on the binding's device signature)
-            switch (binding.device)
+            switch (binding.type)
             {
-                case InputDevice::KEYBOARD:
-                    cur_binding_state = m_input.keyboard().current.test(binding.control);
-                    prev_binding_state = m_input.keyboard().previous.test(binding.control);
+                case InputControlType::AXIS:
+                    queryAxes(binding, action_state);
                     break;
-
-                case InputDevice::MOUSE:
-                    cur_binding_state = m_input.mouse().current.test(binding.control);
-                    prev_binding_state = m_input.mouse().previous.test(binding.control);
+                
+                case InputControlType::BUTTON:
+                    queryButtons(binding, action_state);
                     break;
-
-                case InputDevice::GAMEPAD:
-                    cur_binding_state = m_input.gamepad().current.test(binding.control);
-                    prev_binding_state = m_input.keyboard().previous.test(binding.control);
-                    break;
-
+                
                 default:
-                    cur_binding_state = false;
-                    prev_binding_state = false;
                     break;
             }
 
-            down = cur_binding_state;
-            pressed = !prev_binding_state && cur_binding_state;
-            released = prev_binding_state && !cur_binding_state;
-
-            action_state.down      |= down;
-            action_state.pressed   |= pressed;
-            action_state.released  |= released;
         }
-
-        action_state.value = (action_state.down) ? static_cast<real>(1) : static_cast<real>(0);
     }
+}
+
+template <typename Action>
+inline void conduit::ActionMap<Action>::queryAxes(const Binding &binding, ActionState &state)
+{
+    // TODO
+}
+
+template <typename Action>
+inline void conduit::ActionMap<Action>::queryButtons(const Binding &binding, ActionState &state)
+{
+    // Local variables that tell us whether the current binding is...
+    bool down = false;
+    bool pressed = false;
+    bool released = false;
+
+    // Local variables that let us know the physical state of the binding
+    bool cur_binding_state = false;
+    bool prev_binding_state = false;
+
+    // Acquire current and previous physical state of the binding (depending on the binding's device signature)
+    switch (binding.device)
+    {
+        case InputDevice::KEYBOARD:
+            cur_binding_state = m_input.keyboard().current.test(binding.control);
+            prev_binding_state = m_input.keyboard().previous.test(binding.control);
+            break;
+
+        case InputDevice::MOUSE:
+            cur_binding_state = m_input.mouse().current.test(binding.control);
+            prev_binding_state = m_input.mouse().previous.test(binding.control);
+            break;
+
+        case InputDevice::GAMEPAD:
+            // TODO
+            break;
+
+        default:
+            cur_binding_state = false;
+            prev_binding_state = false;
+            break;
+    }
+
+    // Update local binding state variables
+    down = cur_binding_state;
+    pressed = !prev_binding_state && cur_binding_state;
+    released = prev_binding_state && !cur_binding_state;
+
+    // Commutatively update action state
+    state.down      |= down;
+    state.pressed   |= pressed;
+    state.released  |= released;
+    state.value = (state.down) ? static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
