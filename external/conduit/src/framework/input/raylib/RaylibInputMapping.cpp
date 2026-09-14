@@ -1,11 +1,11 @@
-#include <conduit/framework/input/raylib/RaylibButtonMapping.hpp>
+#include <conduit/framework/input/raylib/RaylibInputMapping.hpp>
 
 raylibKeyButton conduit::raylib::toRaylibKeyButton(conduit::Key key)
 {
     switch (key)
     {
         case Key::A:
-            return raylibKeyButton::KEY_A;
+            return KEY_A;
         
         case Key::B:
             return KEY_B;
@@ -346,6 +346,9 @@ raylibMouseButton conduit::raylib::toRaylibMouseButton(conduit::MouseButton mous
         case MouseButton::EXTRA:
             return MOUSE_BUTTON_EXTRA;
     }
+
+    assert(false && "[RaylibInputMapping] - Invalid MouseButton value.");
+    std::abort();
 }
 
 raylibGamepadButton conduit::raylib::toRaylibGamepadButton(conduit::GamepadButton gamepad_button)
@@ -397,4 +400,34 @@ raylibGamepadButton conduit::raylib::toRaylibGamepadButton(conduit::GamepadButto
         case GamepadButton::D_PAD_LEFT:
             return GAMEPAD_BUTTON_LEFT_FACE_LEFT;
     }
+
+    assert(false && "[RaylibInputMapping] - Invalid GamepadButton value.");
+    std::abort();
+}
+
+raylibGamepadAxis conduit::raylib::toRaylibGamepadAxis(conduit::GamepadAxis gamepad_axis)
+{
+    switch (gamepad_axis)
+    {
+        case GamepadAxis::LEFT_STICK_X:
+            return GAMEPAD_AXIS_LEFT_X;
+
+        case GamepadAxis::LEFT_STICK_Y:
+            return GAMEPAD_AXIS_LEFT_Y;
+        
+        case GamepadAxis::RIGHT_STICK_X:
+            return GAMEPAD_AXIS_RIGHT_X;
+            
+        case GamepadAxis::RIGHT_STICK_Y:
+            return GAMEPAD_AXIS_RIGHT_Y;
+
+        case GamepadAxis::LEFT_TRIGGER:
+            return GAMEPAD_AXIS_LEFT_TRIGGER;
+
+        case GamepadAxis::RIGHT_TRIGGER:
+            return GAMEPAD_AXIS_RIGHT_TRIGGER;
+    }
+
+    assert(false && "[RaylibInputMapping] - Invalid GamepadAxis value.");
+    std::abort();
 }

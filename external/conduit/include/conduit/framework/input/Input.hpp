@@ -1,8 +1,9 @@
 #ifndef CONDUIT_INPUT_HPP
 #define CONDUIT_INPUT_HPP
+#include <conduit/core/config.hpp>
 #include <conduit/framework/input/keyboard/KeyboardState.hpp>
 #include <conduit/framework/input/mouse/MouseState.hpp>
-#include <conduit/framework/input/gamepad/GamepadInput.hpp>
+#include <conduit/framework/input/gamepad/GamepadStates.hpp>
 
 namespace conduit {
 // Forward
@@ -12,10 +13,9 @@ namespace raylib{
 
 class Input {
 private:
-
-KeyboardState                               m_keyboard_state;
-MouseState                                  m_mouse_state;
-GamepadInput                                m_gamepads;
+    KeyboardState                               m_keyboard_state{};
+    MouseState                                  m_mouse_state{};
+    GamepadStates                               m_gamepad_states{};
 
 public:
     friend class raylib::RaylibInput;
@@ -35,7 +35,7 @@ public:
     /**
      * @return the state of the gamepads for the current frame
      */
-    const GamepadInput& gamepads() const;
+    const GamepadStates& gamepads() const;
 }; // class Input
 } // namespace conduit
 

@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(CONDUIT)
 
 set(SOURCE_FILES
-    src/framework/input/gamepad/GamepadInput.cpp
-
+    src/framework/input/raylib/RaylibGamepadInput.cpp
     src/framework/input/raylib/RaylibInput.cpp
     src/framework/input/raylib/RaylibInputMapping.cpp
 
