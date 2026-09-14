@@ -3,14 +3,16 @@
 
 namespace conduit {
 enum class MouseAxis {
-    POSITION_X,
+    POSITION_X = 0,
     POSITION_Y,
 
     DELTA_X,
     DELTA_Y,
 
     WHEEL_X,
-    WHEEL_Y
+    WHEEL_Y,
+
+    MAX_COUNT
 }; // enum class MouseAxis
 } // namespace conduit
 

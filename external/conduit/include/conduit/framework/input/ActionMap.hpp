@@ -87,13 +87,13 @@ inline void conduit::ActionMap<Action>::queryButtons(const Binding &binding, Act
     switch (binding.device)
     {
         case InputDevice::KEYBOARD:
-            cur_binding_state = m_input.keyboard().current.test(binding.control);
-            prev_binding_state = m_input.keyboard().previous.test(binding.control);
+            cur_binding_state = m_input.keyboard().current.test(static_cast<sizet>(binding.control));
+            prev_binding_state = m_input.keyboard().previous.test(static_cast<sizet>(binding.control));
             break;
 
         case InputDevice::MOUSE:
-            cur_binding_state = m_input.mouse().current.test(binding.control);
-            prev_binding_state = m_input.mouse().previous.test(binding.control);
+            cur_binding_state = m_input.mouse().current.test(static_cast<sizet>(binding.control));
+            prev_binding_state = m_input.mouse().previous.test(static_cast<sizet>(binding.control));
             break;
 
         case InputDevice::GAMEPAD:

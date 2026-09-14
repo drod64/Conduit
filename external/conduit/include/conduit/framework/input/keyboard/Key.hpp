@@ -4,7 +4,7 @@
 namespace conduit {
 enum class Key {
     // Letters
-    A, B, C, D, E, F, G, H, I, J, K, L, M,
+    A = 0, B, C, D, E, F, G, H, I, J, K, L, M,
     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
     // Numbers
@@ -18,8 +18,8 @@ enum class Key {
     // Modifiers
     LEFT_SHIFT,
     RIGHT_SHIFT,
-    LEFT_CTRL,
-    RIGHT_CTRL,
+    LEFT_CONTROL,
+    RIGHT_CONTROL,
     LEFT_ALT,
     RIGHT_ALT,
     LEFT_SUPER,
@@ -43,7 +43,7 @@ enum class Key {
     BACKSPACE,
     ENTER,
     TAB,
-    ESC,
+    ESCAPE,
     SPACE,
 
     // Punctuation / symbols
@@ -52,7 +52,7 @@ enum class Key {
     MINUS,
     PERIOD,
     SLASH,
-    SEMI_COLON,
+    SEMICOLON,
     EQUAL,
 
     LEFT_BRACKET,
@@ -79,7 +79,9 @@ enum class Key {
     PAUSE,
 
     // Menu
-    MENU
+    MENU,
+
+    MAX_COUNT
 }; // enum class Key
 } // namespace conduit
 

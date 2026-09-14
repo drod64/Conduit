@@ -1,13 +1,14 @@
 #ifndef CONDUIT_MOUSE_STATE_HPP
 #define CONDUIT_MOUSE_STATE_HPP
-#include <conduit/core/config.hpp>
+#include <conduit/core/primitives.hpp>
 #include <conduit/core/containers/bitset.hpp>
+#include <conduit/framework/input/mouse/MouseButton.hpp>
 #include <sm/Vec2.h>
 
 namespace conduit {
 struct MouseState {
-    bitset<config::MOUSE_BUTTON_COUNT> current;
-    bitset<config::MOUSE_BUTTON_COUNT> previous;
+    bitset<static_cast<sizet>(MouseButton::MAX_COUNT)> current;
+    bitset<static_cast<sizet>(MouseButton::MAX_COUNT)> previous;
 
     sm::Vec2 position;
     sm::Vec2 delta;

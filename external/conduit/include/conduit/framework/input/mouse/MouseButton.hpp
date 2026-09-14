@@ -4,15 +4,16 @@
 
 namespace conduit {
 enum class MouseButton : uint16 {
-    LEFT,
+    LEFT = 0,
     RIGHT,
     MIDDLE,
 
-    EXTRA_1,
-    EXTRA_2,
-    EXTRA_3,
-    EXTRA_4,
-    EXTRA_5
+    SIDE,
+    FORWARD,
+    BACK,
+    EXTRA,
+
+    MAX_COUNT
 }; // enum class MouseButton
 } // namespace conduit
 

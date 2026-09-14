@@ -5,21 +5,21 @@ void conduit::InputTester::test()
     conduit::ActionMap<Action> actions(m_input);
 
     // Create bindings.
-    conduit::Binding forward_wasd(KEY_W, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding forward_keys(KEY_UP, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding forward_wasd(Key::W, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding forward_keys(Key::UP, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding left_wasd(KEY_A, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding left_keys(KEY_LEFT, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding left_wasd(Key::A, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding left_keys(Key::LEFT, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding backward_wasd(KEY_S, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding backward_keys(KEY_DOWN, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding backward_wasd(Key::S, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding backward_keys(Key::DOWN, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding right_wasd(KEY_D, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding right_keys(KEY_RIGHT, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding right_wasd(Key::D, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding right_keys(Key::RIGHT, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding jump(KEY_SPACE, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding jump(Key::SPACE, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
-    conduit::Binding quit(KEY_Q, InputDevice::KEYBOARD, InputControlType::BUTTON);
+    conduit::Binding quit(Key::Q, InputDevice::KEYBOARD, InputControlType::BUTTON);
 
     // Bind actions to bindings.
     actions.bind(Action::FORWARD, forward_wasd);
@@ -43,7 +43,7 @@ void conduit::InputTester::test()
         PollInputEvents();
 
         // Poll hardware.
-        m_input.poll();
+        m_raylib_input.poll(m_input);
         
         // Poll actions.
         actions.poll();

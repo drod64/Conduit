@@ -2,7 +2,7 @@
 #define CONDUIT_GAMEPAD_INPUT_HPP
 #include <raylib.h>
 #include <conduit/core/primitives.hpp>
-#include <conduit/core/config.hpp>
+#include <conduit/framework/input/gamepad/GamepadButton.hpp>
 #include <conduit/framework/input/gamepad/GamepadState.hpp>
 
 namespace conduit {

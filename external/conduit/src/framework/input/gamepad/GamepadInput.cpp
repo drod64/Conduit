@@ -35,7 +35,7 @@ void conduit::GamepadInput::pollButtons(int gamepad, GamepadState &state)
     state.previous = state.current;
 
     // Update current button state of gamepad
-    for (sizet button = 0; button < config::GAMEPAD_BUTTON_COUNT; ++button)
+    for (sizet button = 0; button < static_cast<sizet>(GamepadButton::MAX_COUNT); ++button)
     {
         state.current.set(button, IsGamepadButtonDown(gamepad, static_cast<int>(button)));
     }

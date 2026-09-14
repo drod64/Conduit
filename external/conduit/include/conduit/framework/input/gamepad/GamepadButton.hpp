@@ -4,7 +4,7 @@
 
 namespace conduit {
 enum class GamepadButton : uint16 {
-    A,
+    A = 0,
     B,
     X,
     Y,
@@ -18,7 +18,9 @@ enum class GamepadButton : uint16 {
     D_PAD_UP,
     D_PAD_DOWN,
     D_PAD_RIGHT,
-    D_PAD_LEFT
+    D_PAD_LEFT,
+
+    MAX_COUNT
 }; // enum class GamepadButton
 } // namespace conduit
 

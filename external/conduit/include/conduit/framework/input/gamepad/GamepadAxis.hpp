@@ -4,13 +4,15 @@
 
 namespace conduit {
 enum class GamepadAxis : uint16 {
-    LEFT_STICK_X,
+    LEFT_STICK_X = 0,
     LEFT_STICK_Y,
     RIGHT_STICK_X,
     RIGHT_STICK_Y,
 
     LEFT_TRIGGER,
-    RIGHT_TRIGGER
+    RIGHT_TRIGGER,
+
+    MAX_COUNT
 }; 
 } // namespace conduit
 
