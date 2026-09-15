@@ -1,5 +1,7 @@
 #ifndef CONDUIT_ACTION_MAP_HPP
 #define CONDUIT_ACTION_MAP_HPP
+#include <cassert>
+#include <cstdlib>
 #include <conduit/core/containers/unordered_map.hpp>
 #include <conduit/core/containers/vector.hpp>
 #include <conduit/framework/input/ActionState.hpp>
@@ -16,9 +18,11 @@ private:
     unordered_map<Action, vector<Binding>>      m_bindings;
     unordered_map<Action, ActionState>          m_action_states;
 
-    void updateActionStates();
-    void queryAxes(const Binding& binding, ActionState &state);
-    void queryButtons(const Binding &binding, ActionState &state);
+    real evaluate(const Binding &binding);
+    real evaluate(GamepadAxis gamepad_axis);
+    real evaluate(GamepadButton gamepad_button);
+    real evaluate(Key key);
+    real evaluate(MouseButton mouse_button);
 
 public:
     ActionMap(const Input &input);
@@ -31,91 +35,48 @@ public:
     real value(Action action) const;
 
     void bind(Action action, const Binding &binding);
+    void bind(Action action, InputControl inputControl);
     void unbind(Action action, const Binding &binding);
 }; // class ActionMap<Action>
 } // namespace conduit
 
 // Implementation
 template <typename Action>
-inline void conduit::ActionMap<Action>::updateActionStates()
+conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding)
 {
-    for (const auto &[action, bindings] : m_bindings)
-    {
-        ActionState &action_state = m_action_states[action];
-
-        action_state = {};
-
-        for (const auto &binding : bindings)
+    return std::visit(
+        [this, &binding](const auto& control)
         {
-            switch (binding.type)
-            {
-                case InputControlType::AXIS:
-                    queryAxes(binding, action_state);
-                    break;
-                
-                case InputControlType::BUTTON:
-                    queryButtons(binding, action_state);
-                    break;
-                
-                default:
-                    break;
-            }
-
-        }
-    }
+            return evaluate(control) * binding.scale;
+        },
+        binding.control
+    );
 }
 
 template <typename Action>
-inline void conduit::ActionMap<Action>::queryAxes(const Binding &binding, ActionState &state)
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepad_axis)
 {
     // TODO
+    return static_cast<real>(0);
 }
 
 template <typename Action>
-inline void conduit::ActionMap<Action>::queryButtons(const Binding &binding, ActionState &state)
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepad_button)
 {
-    // Local variables that tell us whether the current binding is...
-    bool down = false;
-    bool pressed = false;
-    bool released = false;
+    // TODO
+    return static_cast<real>(0);
+}
 
-    // Local variables that let us know the physical state of the binding
-    bool cur_binding_state = false;
-    bool prev_binding_state = false;
+template <typename Action>
+conduit::real conduit::ActionMap<Action>::evaluate(Key key)
+{
+    return (m_input.keyboard().current.test(static_cast<sizet>(key))) ? static_cast<real>(1) : static_cast<real>(0);
+}
 
-    // Acquire current and previous physical state of the binding (depending on the binding's device signature)
-    switch (binding.device)
-    {
-        case InputDevice::KEYBOARD:
-            cur_binding_state = m_input.keyboard().current.test(static_cast<sizet>(binding.control));
-            prev_binding_state = m_input.keyboard().previous.test(static_cast<sizet>(binding.control));
-            break;
-
-        case InputDevice::MOUSE:
-            cur_binding_state = m_input.mouse().current.test(static_cast<sizet>(binding.control));
-            prev_binding_state = m_input.mouse().previous.test(static_cast<sizet>(binding.control));
-            break;
-
-        case InputDevice::GAMEPAD:
-            // TODO
-            break;
-
-        default:
-            cur_binding_state = false;
-            prev_binding_state = false;
-            break;
-    }
-
-    // Update local binding state variables
-    down = cur_binding_state;
-    pressed = !prev_binding_state && cur_binding_state;
-    released = prev_binding_state && !cur_binding_state;
-
-    // Commutatively update action state
-    state.down      |= down;
-    state.pressed   |= pressed;
-    state.released  |= released;
-    state.value = (state.down) ? static_cast<real>(1) : static_cast<real>(0);
+template <typename Action>
+conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouse_button)
+{
+    return (m_input.mouse().current.test(static_cast<sizet>(mouse_button))) ? static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
@@ -126,31 +87,48 @@ m_input(input)
 template <typename Action>
 inline void conduit::ActionMap<Action>::poll()
 {
-    updateActionStates();
+    for (const auto &[action, bindings] : m_bindings)
+    {
+        ActionState &action_state = m_action_states[action];
+
+        action_state.previous = action_state.current;
+        action_state.current = static_cast<real>(0);
+
+        for (const Binding &binding : bindings)
+        {
+            action_state.current += evaluate(binding);
+        }
+
+        action_state.current = std::clamp(action_state.current, static_cast<real>(-1), static_cast<real>(1));
+    }
 }
 
 template <typename Action>
 inline bool conduit::ActionMap<Action>::isDown(Action action) const
 {
-    return m_action_states.at(action).down;
+    const ActionState &action_state = m_action_states.at(action);
+    return action_state.current != static_cast<real>(0);
 }
 
 template <typename Action>
 inline bool conduit::ActionMap<Action>::wasPressed(Action action) const
 {
-    return m_action_states.at(action).pressed;
+    const ActionState &action_state = m_action_states.at(action);
+    return action_state.previous == 0 && action_state.current != 0;
 }
 
 template <typename Action>
 inline bool conduit::ActionMap<Action>::wasReleased(Action action) const
 {
-    return m_action_states.at(action).released;
+    const ActionState &action_state = m_action_states.at(action);
+    return action_state.previous != 0 && action_state.current == 0;
 }
 
 template <typename Action>
 inline conduit::real conduit::ActionMap<Action>::value(Action action) const
 {
-    return m_action_states.at(action).value;
+    const ActionState &action_state = m_action_states.at(action);
+    return action_state.current;
 }
 
 template <typename Action>
@@ -160,12 +138,18 @@ void conduit::ActionMap<Action>::bind(Action action, const Binding &binding)
 }
 
 template <typename Action>
+void conduit::ActionMap<Action>::bind(Action action, InputControl inputControl)
+{
+    bind(action, Binding(inputControl));
+}
+
+template <typename Action>
 void conduit::ActionMap<Action>::unbind(Action action, const Binding &binding)
 {
     auto &bindings = m_bindings[action];
 
     auto it = std::erase_if(bindings, [&binding](const Binding &b) -> bool {
-        return (b.control == binding.control) && (b.device == binding.device) && (b.type == binding.type);
+        return b.control == binding.control;
     });
 
     bindings.erase(it);

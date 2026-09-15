@@ -1,21 +1,16 @@
 #ifndef CONDUIT_BINDING_HPP
 #define CONDUIT_BINDING_HPP
-#include <conduit/framework/input/keyboard/Key.hpp>
-#include <conduit/framework/input/InputDevice.hpp>
-#include <conduit/framework/input/InputControlType.hpp>
+#include <conduit/framework/input/InputControl.hpp>
 
 namespace conduit {
 struct Binding {
-
-    Binding(Key control, InputDevice device, InputControlType type) :
+    Binding(InputControl control, real scale = static_cast<real>(1)) :
     control(control),
-    device(device),
-    type(type)
+    scale(scale)
     {}
     
-    Key                 control;
-    InputDevice         device;
-    InputControlType    type;
+    InputControl    control{};
+    real            scale{};
 }; // struct Binding
 } // namespace conduit
 

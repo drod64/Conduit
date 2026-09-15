@@ -4,34 +4,18 @@ void conduit::InputTester::test()
 {
     conduit::ActionMap<Action> actions(m_input);
 
-    // Create bindings.
-    conduit::Binding forward_wasd(Key::W, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding forward_keys(Key::UP, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
-    conduit::Binding left_wasd(Key::A, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding left_keys(Key::LEFT, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
-    conduit::Binding backward_wasd(Key::S, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding backward_keys(Key::DOWN, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
-    conduit::Binding right_wasd(Key::D, InputDevice::KEYBOARD, InputControlType::BUTTON);
-    conduit::Binding right_keys(Key::RIGHT, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
-    conduit::Binding jump(Key::SPACE, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
-    conduit::Binding quit(Key::Q, InputDevice::KEYBOARD, InputControlType::BUTTON);
-
     // Bind actions to bindings.
-    actions.bind(Action::FORWARD, forward_wasd);
-    actions.bind(Action::FORWARD, forward_keys);
-    actions.bind(Action::LEFT, left_wasd);
-    actions.bind(Action::LEFT, left_keys);
-    actions.bind(Action::BACKWARD, backward_wasd);
-    actions.bind(Action::BACKWARD, backward_keys);
-    actions.bind(Action::RIGHT, right_wasd);
-    actions.bind(Action::RIGHT, right_keys);
-    actions.bind(Action::JUMP, jump);
-    actions.bind(Action::QUIT, quit);
+    actions.bind(Action::FORWARD,   Key::W);
+    actions.bind(Action::FORWARD,   Key::UP);
+    actions.bind(Action::LEFT,      Key::A);
+    actions.bind(Action::LEFT,      Key::LEFT);
+    actions.bind(Action::BACKWARD,  Key::S);
+    actions.bind(Action::BACKWARD,  Key::DOWN);
+    actions.bind(Action::RIGHT,     Key::D);
+    actions.bind(Action::RIGHT,     Key::RIGHT);
+    actions.bind(Action::JUMP,      Key::SPACE);
+    actions.bind(Action::JUMP,      MouseButton::RIGHT);
+    actions.bind(Action::QUIT,      Key::Q);
 
     // Initialize window
     InitWindow(100, 100, "Conduit");

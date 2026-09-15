@@ -4,10 +4,8 @@
 
 namespace conduit {
 struct ActionState {
-    bool down       = false;
-    bool pressed    = false;
-    bool released   = false;
-    real value      = static_cast<real>(0);
+    real    current{};
+    real    previous{};
 }; 
 } // namespace conduit
 
