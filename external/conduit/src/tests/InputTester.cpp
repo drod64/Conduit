@@ -2,20 +2,31 @@
 
 void conduit::InputTester::test()
 {
-    conduit::ActionMap<Action> actions(m_input);
+    conduit::ActionMap<Action> actions(m_input, 0);
 
     // Bind actions to bindings.
     actions.bind(Action::FORWARD,   Key::W);
     actions.bind(Action::FORWARD,   Key::UP);
+    actions.bind(Action::FORWARD,   GamepadButton::D_PAD_UP);
+
     actions.bind(Action::LEFT,      Key::A);
     actions.bind(Action::LEFT,      Key::LEFT);
+    actions.bind(Action::LEFT,      GamepadButton::D_PAD_LEFT);
+
     actions.bind(Action::BACKWARD,  Key::S);
     actions.bind(Action::BACKWARD,  Key::DOWN);
+    actions.bind(Action::BACKWARD,  GamepadButton::D_PAD_DOWN);
+
     actions.bind(Action::RIGHT,     Key::D);
     actions.bind(Action::RIGHT,     Key::RIGHT);
+    actions.bind(Action::RIGHT,     GamepadButton::D_PAD_RIGHT);
+
     actions.bind(Action::JUMP,      Key::SPACE);
     actions.bind(Action::JUMP,      MouseButton::RIGHT);
+    actions.bind(Action::JUMP,      GamepadButton::A);
+
     actions.bind(Action::QUIT,      Key::Q);
+    actions.bind(Action::QUIT,      GamepadButton::START);
 
     // Initialize window
     InitWindow(100, 100, "Conduit");

@@ -14,18 +14,19 @@ class Input;
 template <typename Action>
 class ActionMap {
 private:
-    const Input &m_input;
+    const Input&                                m_input;
+    sizet                                       m_gamepad;
     unordered_map<Action, vector<Binding>>      m_bindings;
     unordered_map<Action, ActionState>          m_action_states;
 
-    real evaluate(const Binding &binding);
-    real evaluate(GamepadAxis gamepad_axis);
-    real evaluate(GamepadButton gamepad_button);
-    real evaluate(Key key);
-    real evaluate(MouseButton mouse_button);
+    real evaluate(const Binding &binding) const;
+    real evaluate(GamepadAxis gamepad_axis) const;
+    real evaluate(GamepadButton gamepad_button) const;
+    real evaluate(Key key) const;
+    real evaluate(MouseButton mouse_button) const;
 
 public:
-    ActionMap(const Input &input);
+    ActionMap(const Input &input, sizet gamepad = 0);
     ~ActionMap() = default;
 
     void poll();
@@ -35,14 +36,14 @@ public:
     real value(Action action) const;
 
     void bind(Action action, const Binding &binding);
-    void bind(Action action, InputControl inputControl);
+    void bind(Action action, InputControl inputControl, real scale = static_cast<real>(1));
     void unbind(Action action, const Binding &binding);
 }; // class ActionMap<Action>
 } // namespace conduit
 
 // Implementation
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding)
+conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding) const
 {
     return std::visit(
         [this, &binding](const auto& control)
@@ -54,34 +55,36 @@ conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding)
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepad_axis)
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepad_axis) const
 {
-    // TODO
-    return static_cast<real>(0);
+    return m_input.gamepads()[m_gamepad].axes[static_cast<sizet>(gamepad_axis)];
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepad_button)
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepad_button) const
 {
-    // TODO
-    return static_cast<real>(0);
+    return (m_input.gamepads()[m_gamepad].current.test(static_cast<sizet>(gamepad_button))) ?
+            static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(Key key)
+conduit::real conduit::ActionMap<Action>::evaluate(Key key) const
 {
-    return (m_input.keyboard().current.test(static_cast<sizet>(key))) ? static_cast<real>(1) : static_cast<real>(0);
+    return (m_input.keyboard().current.test(static_cast<sizet>(key))) ?
+        static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouse_button)
+conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouse_button) const
 {
-    return (m_input.mouse().current.test(static_cast<sizet>(mouse_button))) ? static_cast<real>(1) : static_cast<real>(0);
+    return (m_input.mouse().current.test(static_cast<sizet>(mouse_button))) ?
+        static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
-inline conduit::ActionMap<Action>::ActionMap(const Input &input) :
-m_input(input)
+inline conduit::ActionMap<Action>::ActionMap(const Input &input, sizet gamepad) :
+m_input(input),
+m_gamepad(gamepad)
 {}
 
 template <typename Action>
@@ -138,9 +141,9 @@ void conduit::ActionMap<Action>::bind(Action action, const Binding &binding)
 }
 
 template <typename Action>
-void conduit::ActionMap<Action>::bind(Action action, InputControl inputControl)
+void conduit::ActionMap<Action>::bind(Action action, InputControl inputControl, real scale)
 {
-    bind(action, Binding(inputControl));
+    bind(action, Binding(inputControl, scale));
 }
 
 template <typename Action>
