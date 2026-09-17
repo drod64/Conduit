@@ -3,7 +3,7 @@
 void conduit::raylib::RaylibInput::pollKeyboard(KeyboardState &keyboard_state)
 {
     // Update previous button state of keyboard
-    keyboard_state.previous = keyboard_state.current;
+    keyboard_state.updatePrevious();
 
     // Update current button state of keyboard
     for (sizet i = 0; i < static_cast<sizet>(Key::MAX_COUNT); ++i)
@@ -11,14 +11,14 @@ void conduit::raylib::RaylibInput::pollKeyboard(KeyboardState &keyboard_state)
         conduit::Key key = static_cast<conduit::Key>(i);
         raylibKeyButton raylib_key = conduit::raylib::toRaylibKeyButton(key);
 
-        keyboard_state.current.set(i, IsKeyDown(raylib_key));
+        keyboard_state.setKey(key, IsKeyDown(raylib_key));
     }
 }
 
 void conduit::raylib::RaylibInput::pollMouse(MouseState &mouse_state)
 {
     // Update previous button state of mouse
-    mouse_state.previous = mouse_state.current;
+    mouse_state.updatePrevious();
 
     // Update current button state of mouse
     for (sizet i = 0; i < static_cast<sizet>(MouseButton::MAX_COUNT); ++i)
@@ -27,7 +27,7 @@ void conduit::raylib::RaylibInput::pollMouse(MouseState &mouse_state)
 
         raylibMouseButton raylib_mouse_button = conduit::raylib::toRaylibMouseButton(mouseButton);
 
-        mouse_state.current.set(i, IsMouseButtonDown(raylib_mouse_button));
+        mouse_state.setButton(mouseButton, IsMouseButtonDown(raylib_mouse_button));
     }
 
     // Update mouse axes
@@ -36,9 +36,9 @@ void conduit::raylib::RaylibInput::pollMouse(MouseState &mouse_state)
     raylibVec2 rl_mouse_delta = raylibVec2(GetMouseDelta());
     raylibVec2 rl_mouse_wheel = raylibVec2(GetMouseWheelMoveV());
     // Translate to sm::Vec2
-    mouse_state.position = {rl_mouse_position.x, rl_mouse_position.y};
-    mouse_state.delta    = {rl_mouse_delta.x, rl_mouse_delta.y};
-    mouse_state.wheel    = {rl_mouse_wheel.x, rl_mouse_delta.y};
+    mouse_state.setPosition({rl_mouse_position.x, rl_mouse_position.y});
+    mouse_state.setDelta({rl_mouse_delta.x, rl_mouse_delta.y});
+    mouse_state.setWheel({rl_mouse_wheel.x, rl_mouse_delta.y});
 }
 
 void conduit::raylib::RaylibInput::pollGamepads(GamepadStates &gamepad_states)

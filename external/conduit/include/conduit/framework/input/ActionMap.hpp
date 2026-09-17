@@ -15,9 +15,9 @@ template <typename Action>
 class ActionMap {
 private:
     const Input&                                m_input;
-    sizet                                       m_gamepad;
-    unordered_map<Action, vector<Binding>>      m_bindings;
-    unordered_map<Action, ActionState>          m_action_states;
+    sizet                                       m_gamepad{};
+    unordered_map<Action, vector<Binding>>      m_bindings{};
+    unordered_map<Action, ActionState>          m_action_states{};
 
     real evaluate(const Binding &binding) const;
     real evaluate(GamepadAxis gamepad_axis) const;
@@ -57,27 +57,27 @@ conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding) const
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepad_axis) const
 {
-    return m_input.gamepads()[m_gamepad].axes[static_cast<sizet>(gamepad_axis)];
+    return m_input.gamepads()[m_gamepad].axisValue(gamepad_axis);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepad_button) const
 {
-    return (m_input.gamepads()[m_gamepad].current.test(static_cast<sizet>(gamepad_button))) ?
+    return (m_input.gamepads()[m_gamepad].isDown(gamepad_button)) ?
             static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(Key key) const
 {
-    return (m_input.keyboard().current.test(static_cast<sizet>(key))) ?
+    return (m_input.keyboard().isDown(key)) ?
         static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouse_button) const
 {
-    return (m_input.mouse().current.test(static_cast<sizet>(mouse_button))) ?
+    return (m_input.mouse().isDown(mouse_button)) ?
         static_cast<real>(1) : static_cast<real>(0);
 }
 
@@ -157,6 +157,5 @@ void conduit::ActionMap<Action>::unbind(Action action, const Binding &binding)
 
     bindings.erase(it);
 }
-
 
 #endif // CONDUIT_ACTION_MAP_HPP

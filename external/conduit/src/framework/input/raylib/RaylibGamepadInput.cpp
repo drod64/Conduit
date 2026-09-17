@@ -7,21 +7,18 @@ void conduit::raylib::RaylibGamepadInput::pollConnection(int gamepad, GamepadSta
     // Disconnected controller
     if (!connected)
     {
-        state.axes.fill(static_cast<real>(0));
-        state.connected = false;
-        state.current.reset();
-        state.previous.reset();
+        state.reset();
+        state.setConnection(false);
         return;
     }
 
     // Newly connected controller
-    if (!state.connected)
+    if (!state.isConnected())
     {
-        state.current.reset();
-        state.previous.reset();
+        state.reset();
     }
 
-    state.connected = true;
+    state.setConnection(true);
 }
 
 void conduit::raylib::RaylibGamepadInput::pollAxes(int gamepad, GamepadState &state)
@@ -35,18 +32,18 @@ void conduit::raylib::RaylibGamepadInput::pollAxes(int gamepad, GamepadState &st
 
         if (raylib_gamepad_axis >= AXIS_COUNT)
         {
-            state.axes[axis] = static_cast<real>(0);
+            state.setAxis(gamepad_axis, static_cast<real>(0));
             continue;
         }
 
-        state.axes[axis] = static_cast<real>(GetGamepadAxisMovement(gamepad, raylib_gamepad_axis));
+        state.setAxis(gamepad_axis, static_cast<real>(GetGamepadAxisMovement(gamepad, raylib_gamepad_axis)));
     }
 }
 
 void conduit::raylib::RaylibGamepadInput::pollButtons(int gamepad, GamepadState &state)
 {
     // Update previous button state of gamepad
-    state.previous = state.current;
+    state.updatePrevious();
 
     // Update current button state of gamepad
     for (sizet button = 0; button < static_cast<sizet>(GamepadButton::MAX_COUNT); ++button)
@@ -54,7 +51,7 @@ void conduit::raylib::RaylibGamepadInput::pollButtons(int gamepad, GamepadState 
         conduit::GamepadButton gamepad_button = static_cast<GamepadButton>(button);
         raylibGamepadButton raylib_gamepad_button = conduit::raylib::toRaylibGamepadButton(gamepad_button);
 
-        state.current.set(button, IsGamepadButtonDown(gamepad, raylib_gamepad_button));
+        state.setButton(gamepad_button, IsGamepadButtonDown(gamepad, raylib_gamepad_button));
     }
 }
 
@@ -65,7 +62,7 @@ void conduit::raylib::RaylibGamepadInput::poll(GamepadStates &gamepad_states)
         GamepadState &gamepad_state = gamepad_states[gamepad];
     
         pollConnection(static_cast<int>(gamepad), gamepad_state);
-        if (!gamepad_state.connected) continue;
+        if (!gamepad_state.isConnected()) continue;
 
         pollAxes(static_cast<int>(gamepad), gamepad_state);
         

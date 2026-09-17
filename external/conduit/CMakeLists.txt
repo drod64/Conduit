@@ -6,6 +6,9 @@ set(SOURCE_FILES
     src/framework/input/raylib/RaylibGamepadInput.cpp
     src/framework/input/raylib/RaylibInput.cpp
     src/framework/input/raylib/RaylibInputMapping.cpp
+    src/framework/input/gamepad/GamepadState.cpp
+    src/framework/input/keyboard/KeyboardState.cpp
+    src/framework/input/mouse/MouseState.cpp
 
     src/framework/input/Input.cpp
     
