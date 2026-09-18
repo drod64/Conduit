@@ -3,6 +3,9 @@
 #include <conduit/core/primitives.hpp>
 
 namespace conduit {
+/**
+ * Simple state tracker of an action.
+ */
 struct ActionState {
     real    current{};
     real    previous{};

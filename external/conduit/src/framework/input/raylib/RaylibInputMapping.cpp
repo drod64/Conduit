@@ -321,9 +321,9 @@ raylibKeyButton conduit::raylib::toRaylibKeyButton(conduit::Key key)
     }
 }
 
-raylibMouseButton conduit::raylib::toRaylibMouseButton(conduit::MouseButton mouse_button)
+raylibMouseButton conduit::raylib::toRaylibMouseButton(conduit::MouseButton mouseButton)
 {
-    switch (mouse_button)
+    switch (mouseButton)
     {
         case MouseButton::LEFT:
             return MOUSE_BUTTON_LEFT;
@@ -351,9 +351,9 @@ raylibMouseButton conduit::raylib::toRaylibMouseButton(conduit::MouseButton mous
     std::abort();
 }
 
-raylibGamepadButton conduit::raylib::toRaylibGamepadButton(conduit::GamepadButton gamepad_button)
+raylibGamepadButton conduit::raylib::toRaylibGamepadButton(conduit::GamepadButton gamepadButton)
 {
-    switch (gamepad_button)
+    switch (gamepadButton)
     {
         case GamepadButton::A:
             return GAMEPAD_BUTTON_RIGHT_FACE_DOWN;
@@ -405,9 +405,9 @@ raylibGamepadButton conduit::raylib::toRaylibGamepadButton(conduit::GamepadButto
     std::abort();
 }
 
-raylibGamepadAxis conduit::raylib::toRaylibGamepadAxis(conduit::GamepadAxis gamepad_axis)
+raylibGamepadAxis conduit::raylib::toRaylibGamepadAxis(conduit::GamepadAxis gamepadAxis)
 {
-    switch (gamepad_axis)
+    switch (gamepadAxis)
     {
         case GamepadAxis::LEFT_STICK_X:
             return GAMEPAD_AXIS_LEFT_X;

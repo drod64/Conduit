@@ -14,13 +14,41 @@ using raylibGamepadButton = GamepadButton;
 using raylibGamepadAxis = GamepadAxis;
 
 namespace conduit::raylib {
+    /**
+     * Converts a conduit::Key to a raylib KeyboardKey.
+     * 
+     * @param key the key to convert
+     * 
+     * @return the raylib KeyboardKey value
+     */
     raylibKeyButton toRaylibKeyButton(conduit::Key key);
 
-    raylibMouseButton toRaylibMouseButton(conduit::MouseButton mouse_button);
+    /**
+     * Converts a conduit::MouseButton to a raylib MouseButton.
+     * 
+     * @param mouseButton the mouse button to convert
+     * 
+     * @return the raylib MouseButton value
+     */
+    raylibMouseButton toRaylibMouseButton(conduit::MouseButton mouseButton);
 
-    raylibGamepadButton toRaylibGamepadButton(conduit::GamepadButton gamepad_button);
+    /**
+     * Converts a conduit::GamepadButton to a raylib GamepadButton.
+     * 
+     * @param gamepadButton the gamepad button to convert
+     * 
+     * @return the raylib GamepadButton value
+     */
+    raylibGamepadButton toRaylibGamepadButton(conduit::GamepadButton gamepadButton);
 
-    raylibGamepadAxis toRaylibGamepadAxis(conduit::GamepadAxis gamepad_axis);
+    /**
+     * Converts a conduit::GamedpadAxis to a raylibG GamepadAxis.
+     * 
+     * @param gamepadAxis
+     * 
+     * @return the raylib GamepadAxis value
+     */
+    raylibGamepadAxis toRaylibGamepadAxis(conduit::GamepadAxis gamepadAxis);
 } // namespace conduit::raylib
 
 #endif // CONDUIT_RAYLIB_INPUT_MAPPING_HPP

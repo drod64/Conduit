@@ -4,6 +4,9 @@
 #include <conduit/framework/input/InputTypes.hpp>
 
 namespace conduit {
+/**
+ * Supported control types of Conduit.
+ */
 using InputControl = variant <
     GamepadAxis,
     GamepadButton,

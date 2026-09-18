@@ -3,6 +3,10 @@
 #include <conduit/core/primitives.hpp>
 
 namespace conduit {
+/**
+ * Mouse buttons supported by Conduit.
+ * These ideally should be valued from 0 - N.
+ */
 enum class MouseButton : uint16 {
     LEFT = 0,
     RIGHT,

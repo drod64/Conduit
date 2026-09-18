@@ -55,11 +55,11 @@ void conduit::raylib::RaylibGamepadInput::pollButtons(int gamepad, GamepadState 
     }
 }
 
-void conduit::raylib::RaylibGamepadInput::poll(GamepadStates &gamepad_states)
+void conduit::raylib::RaylibGamepadInput::poll(GamepadStates &gamepadStates)
 {
-    for (sizet gamepad = 0; gamepad < gamepad_states.size(); ++gamepad)
+    for (sizet gamepad = 0; gamepad < gamepadStates.size(); ++gamepad)
     {
-        GamepadState &gamepad_state = gamepad_states[gamepad];
+        GamepadState &gamepad_state = gamepadStates[gamepad];
     
         pollConnection(static_cast<int>(gamepad), gamepad_state);
         if (!gamepad_state.isConnected()) continue;

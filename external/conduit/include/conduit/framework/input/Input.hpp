@@ -11,6 +11,9 @@ namespace raylib{
     class RaylibInput;
 } // namespace conduit::raylib
 
+/**
+ * State tracker of all supported input sources (keyboard, mouse, gamepads).
+ */
 class Input {
 private:
     KeyboardState                               m_keyboard_state{};

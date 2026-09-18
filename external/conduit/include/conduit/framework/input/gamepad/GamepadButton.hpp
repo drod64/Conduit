@@ -3,6 +3,10 @@
 #include <conduit/core/primitives.hpp>
 
 namespace conduit {
+/**
+ * Gamepad buttons supported by Conduit.
+ * These ideally should be valued from 0 - N.
+ */
 enum class GamepadButton : uint16 {
     A = 0,
     B,

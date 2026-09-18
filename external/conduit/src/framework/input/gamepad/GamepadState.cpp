@@ -5,30 +5,30 @@ bool conduit::GamepadState::isConnected() const
     return m_connected;
 }
 
-bool conduit::GamepadState::isDown(GamepadButton gamepad_button) const
+bool conduit::GamepadState::isDown(GamepadButton gamepadButton) const
 {
-    const sizet index = static_cast<sizet>(gamepad_button);
+    const sizet index = static_cast<sizet>(gamepadButton);
 
     return m_current.test(index);
 }
 
-bool conduit::GamepadState::wasPressed(GamepadButton gamepad_button) const
+bool conduit::GamepadState::wasPressed(GamepadButton gamepadButton) const
 {
-    const sizet index = static_cast<sizet>(gamepad_button);
+    const sizet index = static_cast<sizet>(gamepadButton);
 
     return !m_previous.test(index) && m_current.test(index);
 }
 
-bool conduit::GamepadState::wasReleased(GamepadButton gamepad_button) const
+bool conduit::GamepadState::wasReleased(GamepadButton gamepadButton) const
 {
-    const sizet index = static_cast<sizet>(gamepad_button);
+    const sizet index = static_cast<sizet>(gamepadButton);
 
     return m_previous.test(index) && !m_current.test(index);
 }
 
-conduit::real conduit::GamepadState::axisValue(GamepadAxis gamepad_axis) const
+conduit::real conduit::GamepadState::axisValue(GamepadAxis gamepadAxis) const
 {
-    const sizet index = static_cast<sizet>(gamepad_axis);
+    const sizet index = static_cast<sizet>(gamepadAxis);
 
     return m_axes[index];
 }
@@ -45,16 +45,16 @@ void conduit::GamepadState::setConnection(bool state)
     m_connected = state;
 }
 
-void conduit::GamepadState::setButton(GamepadButton gamepad_button, bool state)
+void conduit::GamepadState::setButton(GamepadButton gamepadButton, bool state)
 {
-    sizet index = static_cast<sizet>(gamepad_button);
+    sizet index = static_cast<sizet>(gamepadButton);
 
     m_current.set(index, state);
 }
 
-void conduit::GamepadState::setAxis(GamepadAxis gamepad_axis, real value)
+void conduit::GamepadState::setAxis(GamepadAxis gamepadAxis, real value)
 {
-    sizet index = static_cast<sizet>(gamepad_axis);
+    sizet index = static_cast<sizet>(gamepadAxis);
     m_axes[index] = value;
 }
 

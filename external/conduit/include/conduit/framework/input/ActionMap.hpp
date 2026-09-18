@@ -19,24 +19,117 @@ private:
     unordered_map<Action, vector<Binding>>      m_bindings{};
     unordered_map<Action, ActionState>          m_action_states{};
 
+    /**
+     * Helper function that evaluates a binding.
+     * 
+     * @param binding the binding to evaluate
+     * 
+     * @return the value of the binding
+     */
     real evaluate(const Binding &binding) const;
-    real evaluate(GamepadAxis gamepad_axis) const;
-    real evaluate(GamepadButton gamepad_button) const;
+
+    /**
+     * Helper function that evaluates a GamepadAxis.
+     * 
+     * @param gamepadAxis the gamepad axis to query
+     * 
+     * @return the value of the gamepad axis
+     */
+    real evaluate(GamepadAxis gamepadAxis) const;
+    
+    /**
+     * Helper function that evaluates a GamepadButton.
+     * 
+     * @param gamepadButton the gamepad button to query
+     * 
+     * @return the value of the gamepad button
+     */
+    real evaluate(GamepadButton gamepadButton) const;
+
+    /**
+     * Helper function that evaluates a Key.
+     * 
+     * @param key the key to query
+     * 
+     * @return the value of the key
+     */
     real evaluate(Key key) const;
-    real evaluate(MouseButton mouse_button) const;
+
+    /**
+     * Helper function that evaluates a MouseButton.
+     * 
+     * @param mouseButton the mouse button to query
+     * 
+     * @return the value of the mouse button
+     */
+    real evaluate(MouseButton mouseButton) const;
 
 public:
+    /**
+     * Parameterized constructor.
+     * 
+     * @param input a required input source to read states from
+     * @param gamepad an optional index to query a specific gamepad
+     */
     ActionMap(const Input &input, sizet gamepad = 0);
     ~ActionMap() = default;
 
+    /**
+     * Polls the stored conduit::Input to update the action states.
+     */
     void poll();
+
+    /**
+     * @param action the action to check
+     * 
+     * @return true if a binding linked to the action is down, false otherwise
+     */
     bool isDown(Action action) const;
+
+    /**
+     * @param action the action to check
+     * 
+     * @return true if a binding linked to the action was pressed, false otherwise
+     */
     bool wasPressed(Action action) const;
+
+    /**
+     * @param action the action to check
+     * 
+     * @return true if a binding linked to the action was released, false otherwise
+     */
     bool wasReleased(Action action) const;
+
+    /**
+     * @param action the action to query
+     * 
+     * @return the raw value of the action (useful for analog cases)
+     */
     real value(Action action) const;
 
+    /**
+     * Binds a specified binding to an action.
+     * 
+     * @param action the action
+     * @param binding the binding linked to the action
+     */
     void bind(Action action, const Binding &binding);
+
+    /**
+     * Binds a specified binding to an action.
+     * 
+     * @param action the action
+     * @param inputControl the control linked to the action
+     * @param scale optional scale that is multiplied to the action's raw value (defaulted to 1)
+     */
     void bind(Action action, InputControl inputControl, real scale = static_cast<real>(1));
+
+    /**
+     * Unbinds a specified binding from an action.
+     * 
+     * @param action the action
+     * @param binding the binding to unlink/unbind
+     */
     void unbind(Action action, const Binding &binding);
 }; // class ActionMap<Action>
 } // namespace conduit
@@ -55,15 +148,15 @@ conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding) const
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepad_axis) const
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepadAxis) const
 {
-    return m_input.gamepads()[m_gamepad].axisValue(gamepad_axis);
+    return m_input.gamepads()[m_gamepad].axisValue(gamepadAxis);
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepad_button) const
+conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepadButton) const
 {
-    return (m_input.gamepads()[m_gamepad].isDown(gamepad_button)) ?
+    return (m_input.gamepads()[m_gamepad].isDown(gamepadButton)) ?
             static_cast<real>(1) : static_cast<real>(0);
 }
 
@@ -75,9 +168,9 @@ conduit::real conduit::ActionMap<Action>::evaluate(Key key) const
 }
 
 template <typename Action>
-conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouse_button) const
+conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouseButton) const
 {
-    return (m_input.mouse().isDown(mouse_button)) ?
+    return (m_input.mouse().isDown(mouseButton)) ?
         static_cast<real>(1) : static_cast<real>(0);
 }
 

@@ -10,7 +10,7 @@ namespace conduit {
 class InputTester {
 private:
     Input m_input;
-    conduit::raylib::RaylibInput m_raylib_input;    
+    conduit::raylib::RaylibInput m_raylib_input;
 
 public:
     enum class Action : conduit::uint16 {

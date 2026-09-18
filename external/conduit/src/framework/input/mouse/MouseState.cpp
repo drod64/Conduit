@@ -1,22 +1,22 @@
 #include <conduit/framework/input/mouse/MouseState.hpp>
 
-bool conduit::MouseState::isDown(MouseButton mouse_button) const
+bool conduit::MouseState::isDown(MouseButton mouseButton) const
 {
-    sizet index = static_cast<sizet>(mouse_button);
+    sizet index = static_cast<sizet>(mouseButton);
 
     return m_current.test(index);
 }
 
-bool conduit::MouseState::wasPressed(MouseButton mouse_button) const
+bool conduit::MouseState::wasPressed(MouseButton mouseButton) const
 {
-    sizet index = static_cast<sizet>(mouse_button);
+    sizet index = static_cast<sizet>(mouseButton);
 
     return !m_previous.test(index) && m_current.test(index);
 }
 
-bool conduit::MouseState::wasReleased(MouseButton mouse_button) const
+bool conduit::MouseState::wasReleased(MouseButton mouseButton) const
 {
-    sizet index = static_cast<sizet>(mouse_button);
+    sizet index = static_cast<sizet>(mouseButton);
 
     return m_previous.test(index) && !m_current.test(index);
 }
@@ -45,24 +45,24 @@ void conduit::MouseState::reset()
     m_wheel = {static_cast<real>(0), static_cast<real>(0)};
 }
 
-void conduit::MouseState::setButton(MouseButton mouse_button, bool state)
+void conduit::MouseState::setButton(MouseButton mouseButton, bool state)
 {
-    sizet index = static_cast<sizet>(mouse_button);
+    sizet index = static_cast<sizet>(mouseButton);
 
     m_current.set(index, state);
 }
 
-void conduit::MouseState::setPosition(sm::Vec2 position)
+void conduit::MouseState::updatePosition(sm::Vec2 position)
 {
     m_position = position;
 }
 
-void conduit::MouseState::setDelta(sm::Vec2 delta)
+void conduit::MouseState::updateDelta(sm::Vec2 delta)
 {
     m_delta = delta;
 }
 
-void conduit::MouseState::setWheel(sm::Vec2 wheel)
+void conduit::MouseState::updateWheel(sm::Vec2 wheel)
 {
     m_wheel = wheel;
 }

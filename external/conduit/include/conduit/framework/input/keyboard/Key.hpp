@@ -2,6 +2,10 @@
 #define CONDUIT_KEY_HPP
 
 namespace conduit {
+/**
+ * Keys supported by Conduit.
+ * These ideally should be valued from 0 - N.
+ */
 enum class Key {
     // Letters
     A = 0, B, C, D, E, F, G, H, I, J, K, L, M,

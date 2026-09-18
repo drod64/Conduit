@@ -7,6 +7,9 @@
 #include <conduit/framework/input/gamepad/GamepadAxis.hpp>
 
 namespace conduit {
+/**
+ * State tracker of polled gamepads.
+ */
 class GamepadState {
 private:
     bool m_connected = false;
@@ -18,16 +21,71 @@ public:
     GamepadState() = default;
     ~GamepadState() = default;
 
+    /**
+     * @return true if the gamepad is connected, false otherwise
+     */
     bool isConnected() const;
-    bool isDown(GamepadButton gamepad_button) const;
-    bool wasPressed(GamepadButton gamepad_button) const;
-    bool wasReleased(GamepadButton gamepad_button) const;
-    real axisValue(GamepadAxis gamepad_axis) const;
 
+    /**
+     * @param gamepadButton the button to check
+     * 
+     * @return true if the specified button is down, false otherwise
+     */
+    bool isDown(GamepadButton gamepadButton) const;
+
+    /**
+     * @param gamepadButton the button to check
+     * 
+     * @return true if the specified button was pressed, false otherwise
+     */
+    bool wasPressed(GamepadButton gamepadButton) const;
+
+    /**
+     * @param gamepadButton the button to check
+     * 
+     * @return true if the specified button was released, false otherwise
+     */
+    bool wasReleased(GamepadButton gamepadButton) const;
+
+    /**
+     * @param gamepadAxis the axis to check
+     * 
+     * @return the value of the specified axis which ranges from [-1, 1]
+     */
+    real axisValue(GamepadAxis gamepadAxis) const;
+
+    /**
+     * Resets the state of the gamepad.
+     */
     void reset();
+
+    /**
+     * Sets the connection status of the gamepad.
+     * 
+     * @param state the state of connection
+     */
     void setConnection(bool state);
-    void setButton(GamepadButton gamepad_button, bool state);
-    void setAxis(GamepadAxis gamepad_axis, real value);
+
+    /**
+     * Sets a specified button to on/off.
+     * 
+     * @param gamepadButton the button to set
+     * @param state the state of the button
+     */
+    void setButton(GamepadButton gamepadButton, bool state);
+
+    /**
+     * Sets a specified axis to a value.
+     * 
+     * @param gamepadAxis the axis to set
+     * @param value the value of the axis
+     */
+    void setAxis(GamepadAxis gamepadAxis, real value);
+
+    /**
+     * Updates the previous state of the gamepad.
+     * This is essential for the wasPressed()/wasReleased() operations.
+     */
     void updatePrevious();
 }; // class GamepadState
 } // namespace conduit
