@@ -21,18 +21,20 @@ endif()
 
 set(
     SOURCE_FILES
-    src/framework/input/glfw/GLFWGamepadInput.cpp
-    src/framework/input/glfw/GLFWInput.cpp
-    src/framework/input/glfw/GLFWInputMapping.cpp
-    
-    src/framework/input/gamepad/GamepadState.cpp
-    src/framework/input/keyboard/KeyboardState.cpp
-    src/framework/input/mouse/MouseState.cpp
+    src/backend/glfw/input/GLFWGamepadInput.cpp
+    src/backend/glfw/input/GLFWInput.cpp
+    src/backend/glfw/input/GLFWInputMapping.cpp
 
-    src/framework/input/Input.cpp
-    
     src/framework/Time.cpp
-    
+
+    src/input/gamepad/GamepadState.cpp
+
+    src/input/keyboard/KeyboardState.cpp
+
+    src/input/mouse/MouseState.cpp
+
+    src/input/Input.cpp
+
     src/tests/InputTester.cpp
 )
 
