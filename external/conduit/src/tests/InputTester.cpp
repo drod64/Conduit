@@ -2,7 +2,9 @@
 
 void conduit::InputTester::test()
 {
-    conduit::ActionMap<Action> actions(m_input, 0);
+    conduit::Input input;
+
+    conduit::ActionMap<Action> actions(input, 0);
 
     // -1 for forwards
     actions.bind(Action::FORWARD,   Key::W, -1);
@@ -33,22 +35,39 @@ void conduit::InputTester::test()
     actions.bind(Action::JUMP,      MouseButton::RIGHT);
     actions.bind(Action::JUMP,      GamepadButton::A);
 
-    actions.bind(Action::QUIT,      Key::Q);
-    actions.bind(Action::QUIT,      GamepadButton::START);
-
     conduit::real deadzone = 0.5;
 
     // Initialize window
-    InitWindow(100, 100, "conduit::InputTester.cpp");
-    SetTargetFPS(conduit::config::TARGET_FRAME_RATE);
+    if (!glfwInit())
+    {
+        return;
+    }
+
+    GLFWwindow* window = glfwCreateWindow(
+        100,
+        100,
+        "Conduit Input Tester",
+        nullptr,
+        nullptr
+    );
+
+    if (!window)
+    {
+        glfwTerminate();
+        return;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    conduit::glfw::GLFWInput glfw_input(*window);
 
     // Simple loop to poll input
-    while (!WindowShouldClose())
+    while (!glfwWindowShouldClose(window))
     {
-        PollInputEvents();
+        glfwPollEvents();
 
         // Poll hardware.
-        m_raylib_input.poll(m_input);
+        glfw_input.poll(input);
         
         // Poll actions.
         actions.poll();
@@ -77,10 +96,8 @@ void conduit::InputTester::test()
         {
             std::cout << "Jumped\n";
         }
-
-        if (actions.wasReleased(Action::QUIT))
-        {
-            CloseWindow();
-        }
     }
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }

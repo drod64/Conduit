@@ -4,18 +4,17 @@
 #include <conduit/core/primitives.hpp>
 #include <conduit/framework/input/Input.hpp>
 #include <conduit/framework/input/ActionMap.hpp>
-#include <conduit/framework/input/raylib/RaylibInput.hpp>
+#include <conduit/framework/input/glfw/GLFWInput.hpp>
 
 namespace conduit {
 class InputTester {
-private:
-    Input m_input;
-    conduit::raylib::RaylibInput m_raylib_input;
-
 public:
     enum class Action : conduit::uint16 {
         FORWARD, BACKWARD, LEFT, RIGHT, JUMP, QUIT
     };
+
+    InputTester() = default;
+    ~InputTester() = default;
 
     void test();
 }; // class InputTester

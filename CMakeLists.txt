@@ -22,6 +22,12 @@ else ()
     add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 endif ()
 
+# Link glfw
+target_link_libraries(${PROJECT_NAME} glfw)
+
+# Link entt
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/entt/include)
+
 # Link conduit library.
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/conduit)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/external/conduit/include)

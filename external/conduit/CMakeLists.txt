@@ -21,6 +21,10 @@ endif()
 
 set(
     SOURCE_FILES
+    src/framework/input/glfw/GLFWGamepadInput.cpp
+    src/framework/input/glfw/GLFWInput.cpp
+    src/framework/input/glfw/GLFWInputMapping.cpp
+    
     src/framework/input/gamepad/GamepadState.cpp
     src/framework/input/keyboard/KeyboardState.cpp
     src/framework/input/mouse/MouseState.cpp
@@ -29,7 +33,7 @@ set(
     
     src/framework/Time.cpp
     
-    # src/tests/InputTester.cpp
+    src/tests/InputTester.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})

@@ -7,9 +7,9 @@
 
 namespace conduit {
 // Forward
-namespace raylib{
-    class RaylibInput;
-} // namespace conduit::raylib
+namespace glfw{
+    class GLFWInput;
+} // namespace conduit::glfw
 
 /**
  * State tracker of all supported input sources (keyboard, mouse, gamepads).
@@ -21,7 +21,7 @@ private:
     GamepadStates                               m_gamepad_states{};
 
 public:
-    friend class raylib::RaylibInput;
+    friend class glfw::GLFWInput;
     Input() = default;
     ~Input() = default;
 
