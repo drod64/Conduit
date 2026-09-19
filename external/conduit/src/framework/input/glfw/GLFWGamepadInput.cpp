@@ -54,7 +54,7 @@ void conduit::glfw::GLFWGamepadInput::pollAxesAndButtons(int gamepad, GamepadSta
         conduit::GamepadButton conduit_button = static_cast<GamepadButton>(button);
         conduit::glfw::glfwGamepadButton glfw_button = toGLFWGamepadButton(conduit_button);
 
-        state.setButton(conduit_button, glfw_state.buttons[glfw_button]);
+        state.setButton(conduit_button, glfw_state.buttons[glfw_button] == GLFW_PRESS);
     }
 }
 
