@@ -19,16 +19,18 @@ namespace conduit::glfw::input {
     /**
      * Helper function that focuses on polling the keyboard.
      * 
-     * @param keyboardState the keyboard state to poll and store the results in
+     * @param glfwWindow the glfw window to poll
+     * @param keyboardState the keyboard state to store the results in
      */
-    void pollKeyboard(const conduit::glfw::GLFWWindow &pWindow, KeyboardState &keyboardState);
+    void pollKeyboard(const conduit::glfw::window::GLFWWindow &glfwWindow, KeyboardState &keyboardState);
 
     /**
      * Helper function that focuses on polling the mouse.
      * 
-     * @param mouseState the mouse state to poll and store the results in
+     * @param glfwWindow the glfw window to poll
+     * @param mouseState the mouse state to store the results in
      */
-    void pollMouse(const conduit::glfw::GLFWWindow &pWindow, MouseState &mouseState);
+    void pollMouse(const conduit::glfw::window::GLFWWindow &glfwWindow, MouseState &mouseState);
 
     /**
      * Helper function that focuses on polling gamepads.

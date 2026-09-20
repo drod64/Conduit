@@ -2,7 +2,7 @@
 #define CONDUIT_PLATFORM_HPP
 #include <conduit/core/config.hpp>
 
-#if CONDUIT_WINDOW_BACKEND_GLFW
+#if CONDUIT_PLATFORM_BACKEND_GLFW
     #include <conduit/backend/glfw/platform/GLFWPlatform.hpp>
     namespace conduit {
         namespace platform = glfw;

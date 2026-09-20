@@ -18,6 +18,14 @@ private:
     GamepadStates                               m_gamepad_states{};
 
 public:
+    /**
+     * Parameterized constructor.
+     * 
+     * Every Input object must be linked to a conduit::Window in order
+     * to poll input pertaining to that window.
+     * 
+     * @param window the window to link the Input to
+     */
     Input(const conduit::Window &window);
     ~Input() = default;
 
@@ -36,6 +44,10 @@ public:
      */
     const GamepadStates& gamepads() const;
 
+    /**
+     * Polls the input state of the frame.
+     * Results can be extracted via Input's keyboard(), mouse(), and gamepads() calls.
+     */
     void poll();
 }; // class Input
 } // namespace conduit

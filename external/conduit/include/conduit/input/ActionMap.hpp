@@ -9,6 +9,9 @@
 #include <conduit/input/Input.hpp>
 
 namespace conduit {
+/**
+ * Logical action tracker that allows multiple bindings to affect one action.
+ */
 template <typename Action>
 class ActionMap {
 private:

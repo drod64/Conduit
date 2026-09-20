@@ -6,10 +6,16 @@
 #include <conduit/backend/glfw/input/GLFWInput.hpp>
 
 namespace conduit::glfw {
-    using Window = GLFWWindow;
+    using Window = window::GLFWWindow;
 
+    /**
+     * Initializes the glfw library.
+     */
     void initialize();
 
+    /**
+     * Shutdowns the glfw library.
+     */
     void shutdown();
 } // namespace conduit::glfw
 

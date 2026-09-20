@@ -8,7 +8,7 @@
 #include <conduit/input/gamepad/GamepadButton.hpp>
 #include <conduit/input/gamepad/GamepadAxis.hpp>
 
-namespace conduit::glfw {
+namespace conduit::glfw::input {
     using glfwKey = int;
     using glfwMouseButton = int;
     using glfwGamepadButton = int;
@@ -49,6 +49,6 @@ namespace conduit::glfw {
      * @return the glfw GamepadAxis value
      */
     glfwGamepadAxis toGLFWGamepadAxis(conduit::GamepadAxis gamepadAxis);
-} // namespace conduit::glfw
+} // namespace conduit::glfw::input
 
 #endif // CONDUIT_GLFW_INPUT_MAPPING_HPP

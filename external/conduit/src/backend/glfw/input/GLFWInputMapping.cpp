@@ -1,6 +1,6 @@
 #include <conduit/backend/glfw/input/GLFWInputMapping.hpp>
 
-conduit::glfw::glfwKey conduit::glfw::toGLFWKeyButton(conduit::Key key)
+conduit::glfw::input::glfwKey conduit::glfw::input::toGLFWKeyButton(conduit::Key key)
 {
     switch (key)
     {
@@ -321,7 +321,7 @@ conduit::glfw::glfwKey conduit::glfw::toGLFWKeyButton(conduit::Key key)
     }
 }
 
-conduit::glfw::glfwMouseButton conduit::glfw::toGLFWMouseButton(conduit::MouseButton mouseButton)
+conduit::glfw::input::glfwMouseButton conduit::glfw::input::toGLFWMouseButton(conduit::MouseButton mouseButton)
 {
     switch (mouseButton)
     {
@@ -351,7 +351,7 @@ conduit::glfw::glfwMouseButton conduit::glfw::toGLFWMouseButton(conduit::MouseBu
     std::abort();
 }
 
-conduit::glfw::glfwGamepadButton conduit::glfw::toGLFWGamepadButton(conduit::GamepadButton gamepadButton)
+conduit::glfw::input::glfwGamepadButton conduit::glfw::input::toGLFWGamepadButton(conduit::GamepadButton gamepadButton)
 {
     switch (gamepadButton)
     {
@@ -405,7 +405,7 @@ conduit::glfw::glfwGamepadButton conduit::glfw::toGLFWGamepadButton(conduit::Gam
     std::abort();
 }
 
-conduit::glfw::glfwGamepadAxis conduit::glfw::toGLFWGamepadAxis(conduit::GamepadAxis gamepadAxis)
+conduit::glfw::input::glfwGamepadAxis conduit::glfw::input::toGLFWGamepadAxis(conduit::GamepadAxis gamepadAxis)
 {
     switch (gamepadAxis)
     {
