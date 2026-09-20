@@ -1,9 +1,8 @@
 #ifndef CONDUIT_INPUT_HPP
 #define CONDUIT_INPUT_HPP
-#include <conduit/backend/Platform.hpp>
+#include <conduit/input/gamepad/GamepadStates.hpp>
 #include <conduit/input/keyboard/KeyboardState.hpp>
 #include <conduit/input/mouse/MouseState.hpp>
-#include <conduit/input/gamepad/GamepadStates.hpp>
 #include <conduit/window/Window.hpp>
 
 namespace conduit {
@@ -33,16 +32,19 @@ public:
      * @return the state of the keyboard for the current frame
      */
     const KeyboardState& keyboard() const;
+    KeyboardState& keyboard();
 
     /**
      * @return the state of the mouse for the current frame
      */
     const MouseState& mouse() const;
+    MouseState& mouse();
 
     /**
      * @return the state of the gamepads for the current frame
      */
     const GamepadStates& gamepads() const;
+    GamepadStates& gamepads();
 
     /**
      * Polls the input state of the frame.

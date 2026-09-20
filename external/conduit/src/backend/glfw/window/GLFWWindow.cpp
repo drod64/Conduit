@@ -1,9 +1,13 @@
 #include <conduit/backend/glfw/window/GLFWWindow.hpp>
+#include <conduit/backend/glfw/input/GLFWInput.hpp>
 
 conduit::glfw::window::GLFWWindow::GLFWWindow(uint32 width, uint32 height, const char *title)
 {
     m_glfw_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    
     assert(m_glfw_window && "[conduit::glfw::GLFWWindow] - Failed to create glfw window.");
+
+    conduit::glfw::input::detail::registerGLFWCallbacks(m_glfw_window);
 }
 
 conduit::glfw::window::GLFWWindow::~GLFWWindow()

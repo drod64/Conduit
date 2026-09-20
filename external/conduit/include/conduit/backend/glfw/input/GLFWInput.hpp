@@ -1,43 +1,32 @@
 #ifndef CONDUIT_GLFW_INPUT_HPP
 #define CONDUIT_GLFW_INPUT_HPP
-#include <conduit/backend/glfw/input/GLFWInputMapping.hpp>
-#include <conduit/backend/glfw/window/GLFWWindow.hpp>
-#include <conduit/input/keyboard/KeyboardState.hpp>
-#include <conduit/input/mouse/MouseState.hpp>
-#include <conduit/input/gamepad/GamepadStates.hpp>
+#include <glfw/glfw3.h>
+
+// Forwards
+namespace conduit{
+    class Input;
+
+    namespace glfw::window {
+        class GLFWWindow;
+    }
+}
 
 namespace conduit::glfw::input {
-    /** TODO
-    //  * GLFW dependent callback for mouse scroll/wheel accumulation.
-    //  * 
-    //  * @param window a pointer to the GLFWWindow
-    //  * @param x the x offset
-    //  * @param y the y offset
-    //  */
-    // void scrollCallback(GLFWwindow *window, double x, double y);
-
     /**
-     * Helper function that focuses on polling the keyboard.
+     * Polls the input state using glfw specific functions.
      * 
-     * @param glfwWindow the glfw window to poll
-     * @param keyboardState the keyboard state to store the results in
+     * @param platformWindow the underlying platform window Conduit is using (which should equate to conduit::glfw::window::GLFWWindow)
+     * @param input the input tracker to store the results in
      */
-    void pollKeyboard(const conduit::glfw::window::GLFWWindow &glfwWindow, KeyboardState &keyboardState);
+    void poll(const conduit::glfw::window::GLFWWindow &platformWindow, conduit::Input &input);
 
-    /**
-     * Helper function that focuses on polling the mouse.
-     * 
-     * @param glfwWindow the glfw window to poll
-     * @param mouseState the mouse state to store the results in
-     */
-    void pollMouse(const conduit::glfw::window::GLFWWindow &glfwWindow, MouseState &mouseState);
-
-    /**
-     * Helper function that focuses on polling gamepads.
-     * 
-     * @param gamepadStates the gamepad states to poll and store the results in
-     */
-    void pollGamepads(GamepadStates &gamepadStates);
+    namespace detail {
+        /**
+         * GLFW specific function.
+         * Registers any callbacks necessary for input polling.
+         */
+        void registerGLFWCallbacks(GLFWwindow *glfwWindow);
+    }
 } // namespace conduit::glfw::input
 
 #endif // CONDUIT_GLFW_INPUT_HPP

@@ -1,48 +1,84 @@
 #include <conduit/backend/glfw/input/GLFWInput.hpp>
-
-void conduit::glfw::input::pollKeyboard(const conduit::glfw::window::GLFWWindow &pWindow, KeyboardState &keyboardState)
-{
-    // Update previous button state of keyboard
-    keyboardState.updatePrevious();
-
-    // Update current button state of keyboard
-    for (sizet key = 0; key < static_cast<sizet>(Key::MAX_COUNT); ++key)
-    {
-        conduit::Key conduit_key = static_cast<conduit::Key>(key);
-        conduit::glfw::input::glfwKey glfw_key = toGLFWKeyButton(conduit_key);
-
-        keyboardState.setKey(conduit_key, glfwGetKey(pWindow.nativeHandle(), glfw_key) == GLFW_PRESS);
-    }
-}
-
-void conduit::glfw::input::pollMouse(const conduit::glfw::window::GLFWWindow &pWindow, MouseState &mouseState)
-{
-    // Update previous button state of mouse
-    mouseState.updatePrevious();
-
-    // Update current button state of mouse
-    for (sizet button = 0; button < static_cast<sizet>(MouseButton::MAX_COUNT); ++button)
-    {
-        conduit::MouseButton conduit_button = static_cast<conduit::MouseButton>(button);
-        conduit::glfw::input::glfwMouseButton glfw_button = toGLFWMouseButton(conduit_button);
-
-        mouseState.setButton(conduit_button, glfwGetMouseButton(pWindow.nativeHandle(), glfw_button) == GLFW_PRESS);
-    }
-
-    // Update mouse axes
-    double x, y;
-    glfwGetCursorPos(pWindow.nativeHandle(), &x, &y);
-
-    sm::Vec2 current_pos(static_cast<real>(x), static_cast<real>(y));
-
-    // Translate to sm::Vec2
-    mouseState.updateDelta(current_pos - mouseState.position());
-    mouseState.updatePosition(current_pos);
-    // mouseState.updateWheel(m_wheel); TODO
-    // m_wheel = {};
-}
+#include <conduit/backend/glfw/input/GLFWInputMapping.hpp>
+#include <conduit/backend/glfw/window/GLFWWindow.hpp>
+#include <conduit/input/Input.hpp>
+#include <conduit/input/gamepad/GamepadStates.hpp>
+#include <conduit/input/keyboard/KeyboardState.hpp>
+#include <conduit/input/mouse/MouseState.hpp>
 
 namespace {
+    double scroll_x = 0;
+    double scroll_y = 0;
+
+    /**
+     * GLFW dependent callback for mouse scroll/wheel accumulation.
+     * 
+     * @param window a pointer to the GLFWWindow
+     * @param xOffset the x offset
+     * @param yOffset the y offset
+     */
+    void scrollCallback(GLFWwindow *window, double xOffset, double yOffset)
+    {
+        scroll_x += xOffset;
+        scroll_y += yOffset;
+    }
+
+    /**
+     * Focuses on polling the keyboard.
+     * 
+     * @param glfwWindow the native GLFWwindow type
+     * @param keyboardState the keyboard state to store the results in
+     */
+    void pollKeyboard(GLFWwindow *glfwWindow, conduit::KeyboardState &keyboardState)
+    {
+        // Update previous button state of keyboard
+        keyboardState.updatePrevious();
+
+        // Update current button state of keyboard
+        for (conduit::sizet key = 0; key < static_cast<conduit::sizet>(conduit::Key::MAX_COUNT); ++key)
+        {
+            conduit::Key conduit_key = static_cast<conduit::Key>(key);
+            conduit::glfw::input::glfwKey glfw_key = conduit::glfw::input::toGLFWKeyButton(conduit_key);
+
+            keyboardState.setKey(conduit_key, glfwGetKey(glfwWindow, glfw_key) == GLFW_PRESS);
+        }
+    }
+
+    /**
+     * Focuses on polling the mouse.
+     * 
+     * @param glfwWindow the native GLFWwindow type
+     * @param mouseState the mouse state to store the results in
+     */
+    void pollMouse(GLFWwindow *glfwWindow, conduit::MouseState &mouseState)
+    {
+        // Update previous button state of mouse
+        mouseState.updatePrevious();
+
+        // Update current button state of mouse
+        for (conduit::sizet button = 0; button < static_cast<conduit::sizet>(conduit::MouseButton::MAX_COUNT); ++button)
+        {
+            conduit::MouseButton conduit_button = static_cast<conduit::MouseButton>(button);
+            conduit::glfw::input::glfwMouseButton glfw_button = conduit::glfw::input::toGLFWMouseButton(conduit_button);
+
+            mouseState.setButton(conduit_button, glfwGetMouseButton(glfwWindow, glfw_button) == GLFW_PRESS);
+        }
+
+        // Update mouse axes
+        double xPos, yPos;
+        glfwGetCursorPos(glfwWindow, &xPos, &yPos);
+
+        sm::Vec2 current_pos(static_cast<conduit::real>(xPos), static_cast<conduit::real>(yPos));
+
+        // Translate to sm::Vec2
+        mouseState.updateDelta(current_pos - mouseState.position());
+        mouseState.updatePosition(current_pos);
+        mouseState.updateWheel(sm::Vec2(static_cast<conduit::real>(scroll_x), static_cast<conduit::real>(scroll_y)));
+        
+        scroll_x = 0;
+        scroll_y = 0;
+    }
+
     /**
      * Helper function that focuses on polling a gamepad's connection.
      * @param gamepad the gamepad index
@@ -110,17 +146,35 @@ namespace {
             state.setButton(conduit_button, glfw_state.buttons[glfw_button] == GLFW_PRESS);
         }
     }
+
+    /**
+     * Focuses on polling the gamepads.
+     * 
+     * @param glfwWindow the native GLFWwindow type
+     * @param gamepadStates the gamepad states to store the results in
+     */
+    void pollGamepads(conduit::GamepadStates &gamepadStates)
+    {
+        for (conduit::sizet gamepad = 0; gamepad < gamepadStates.size(); ++gamepad)
+        {
+            conduit::GamepadState &gamepad_state = gamepadStates[gamepad];
+        
+            pollConnection(static_cast<int>(gamepad), gamepad_state);
+            if (!gamepad_state.isConnected()) continue;
+
+            pollAxesAndButtons(static_cast<int>(gamepad), gamepad_state);
+        }
+    }
 }
 
-void conduit::glfw::input::pollGamepads(GamepadStates &gamepadStates)
+void conduit::glfw::input::poll(const conduit::glfw::window::GLFWWindow &platformWindow, conduit::Input &input)
 {
-    for (sizet gamepad = 0; gamepad < gamepadStates.size(); ++gamepad)
-    {
-        GamepadState &gamepad_state = gamepadStates[gamepad];
-    
-        pollConnection(static_cast<int>(gamepad), gamepad_state);
-        if (!gamepad_state.isConnected()) continue;
+    pollGamepads(input.gamepads());
+    pollKeyboard(platformWindow.nativeHandle(), input.keyboard());
+    pollMouse(platformWindow.nativeHandle(), input.mouse());
+}
 
-        pollAxesAndButtons(static_cast<int>(gamepad), gamepad_state);
-    }
+void conduit::glfw::input::detail::registerGLFWCallbacks(GLFWwindow *glfwWindow)
+{
+    glfwSetScrollCallback(glfwWindow, scrollCallback);
 }

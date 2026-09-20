@@ -56,6 +56,16 @@ void conduit::InputTester::test()
         // Poll actions.
         actions.poll();
 
+        if (input.mouse().wheel().y > 0)
+        {
+            std::cout << "Mouse scrolling up\n";
+        }
+
+        if (input.mouse().wheel().y < 0)
+        {
+            std::cout << "Mouse scrolling down\n";
+        }
+
         if (actions.value(Action::FORWARD) < -deadzone)
         {
             std::cout << "Moving forward\n";
