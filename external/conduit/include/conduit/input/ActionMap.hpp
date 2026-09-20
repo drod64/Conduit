@@ -6,11 +6,9 @@
 #include <conduit/core/containers/vector.hpp>
 #include <conduit/input/ActionState.hpp>
 #include <conduit/input/Binding.hpp>
+#include <conduit/input/Input.hpp>
 
 namespace conduit {
-// Forward declaration
-class Input;
-
 template <typename Action>
 class ActionMap {
 private:

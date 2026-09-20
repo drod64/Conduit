@@ -2,6 +2,8 @@
 #define CONDUIT_CONFIG_HPP
 #include <cstddef>
 
+#define CONDUIT_WINDOW_BACKEND_GLFW @CONDUIT_PLATFORM_BACKEND_GLFW@
+
 namespace conduit::config {
     #define CONDUIT_ALIGN_16 alignas(16)
     #define CONDUIT_ALIGN_64 alignas(64)

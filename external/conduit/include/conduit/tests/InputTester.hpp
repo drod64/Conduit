@@ -2,9 +2,9 @@
 #define CONDUIT_INPUT_TESTER_HPP
 #include <iostream>
 #include <conduit/core/primitives.hpp>
-#include <conduit/input/Input.hpp>
 #include <conduit/input/ActionMap.hpp>
-#include <conduit/backend/glfw/input/GLFWInput.hpp>
+#include <conduit/input/Input.hpp>
+#include <conduit/window/Window.hpp>
 
 namespace conduit {
 class InputTester {

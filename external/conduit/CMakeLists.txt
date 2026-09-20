@@ -21,10 +21,6 @@ endif()
 
 set(
     SOURCE_FILES
-    src/backend/glfw/input/GLFWGamepadInput.cpp
-    src/backend/glfw/input/GLFWInput.cpp
-    src/backend/glfw/input/GLFWInputMapping.cpp
-
     src/framework/Time.cpp
 
     src/input/gamepad/GamepadState.cpp
@@ -36,9 +32,57 @@ set(
     src/input/Input.cpp
 
     src/tests/InputTester.cpp
+
+    src/window/Window.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+
+# Select the platform backend.
+set(CONDUIT_PLATFORM_BACKEND
+    "GLFW"
+    CACHE STRING
+    "Platform backend"
+)
+set_property(
+    CACHE CONDUIT_PLATFORM_BACKEND
+    PROPERTY STRINGS GLFW
+)
+
+# Build the actual cpp files needed for the platform backend.
+if(CONDUIT_PLATFORM_BACKEND STREQUAL "GLFW")
+    set(CONDUIT_PLATFORM_BACKEND_GLFW 1)
+    target_sources(${PROJECT_NAME} PRIVATE
+        src/backend/glfw/input/GLFWInput.cpp
+        src/backend/glfw/input/GLFWInputMapping.cpp
+
+        src/backend/glfw/platform/GLFWPlatform.cpp
+
+        src/backend/glfw/window/GLFWWindow.cpp
+    )
+
+else()
+    message(FATAL_ERROR
+        "Unsupported platform backend: ${CONDUIT_PLATFORM_BACKEND}"
+    )
+endif()
+
+# Store the results in a generated config.hpp.
+set(
+    CONDUIT_GENERATED_INCLUDE_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}/generated/include
+)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/conduit/core/config.hpp.in
+    ${CONDUIT_GENERATED_INCLUDE_DIR}/conduit/core/config.hpp
+)
+
+# Link conduit's header files to itself.
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        ${CONDUIT_GENERATED_INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 # Link glfw to conduit
 target_link_libraries(${PROJECT_NAME} glfw)
@@ -50,6 +94,3 @@ target_link_libraries(${PROJECT_NAME} SM)
 
 # Link entt (version 4.0.0) to conduit
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/external/entt/include)
-
-# Link the project's own headers.
-target_include_directories(${PROJECT_NAME} PUBLIC INCLUDE)

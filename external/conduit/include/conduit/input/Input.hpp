@@ -1,28 +1,24 @@
 #ifndef CONDUIT_INPUT_HPP
 #define CONDUIT_INPUT_HPP
-#include <conduit/core/config.hpp>
+#include <conduit/backend/Platform.hpp>
 #include <conduit/input/keyboard/KeyboardState.hpp>
 #include <conduit/input/mouse/MouseState.hpp>
 #include <conduit/input/gamepad/GamepadStates.hpp>
+#include <conduit/window/Window.hpp>
 
 namespace conduit {
-// Forward
-namespace glfw{
-    class GLFWInput;
-} // namespace conduit::glfw
-
 /**
  * State tracker of all supported input sources (keyboard, mouse, gamepads).
  */
 class Input {
 private:
+    const conduit::Window                      &m_window;
     KeyboardState                               m_keyboard_state{};
     MouseState                                  m_mouse_state{};
     GamepadStates                               m_gamepad_states{};
 
 public:
-    friend class glfw::GLFWInput;
-    Input() = default;
+    Input(const conduit::Window &window);
     ~Input() = default;
 
     /**
@@ -39,6 +35,8 @@ public:
      * @return the state of the gamepads for the current frame
      */
     const GamepadStates& gamepads() const;
+
+    void poll();
 }; // class Input
 } // namespace conduit
 
