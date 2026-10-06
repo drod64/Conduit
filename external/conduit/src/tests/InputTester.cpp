@@ -11,36 +11,35 @@ void conduit::InputTester::test()
     conduit::ActionMap<Action> actions(input, 0);
 
     // -1 for forwards
-    actions.bind(Action::FORWARD,   Key::W, -1);
-    actions.bind(Action::FORWARD,   Key::UP, -1);
-    actions.bind(Action::FORWARD,   GamepadButton::D_PAD_UP, -1);
-    actions.bind(Action::FORWARD,   GamepadAxis::LEFT_STICK_Y);
+    actions.bind(Action::FORWARD,   InputControl::key(Key::W), -1);
+    actions.bind(Action::FORWARD,   InputControl::key(Key::UP), -1);
+    actions.bind(Action::FORWARD,   InputControl::gamepadButton(GamepadButton::D_PAD_UP), -1);
+    actions.bind(Action::FORWARD,   InputControl::gamepadAxis(GamepadAxis::LEFT_STICK_Y));
 
     // -1 for left
-    actions.bind(Action::LEFT,      Key::A, -1);
-    actions.bind(Action::LEFT,      Key::LEFT, -1);
-    actions.bind(Action::LEFT,      GamepadButton::D_PAD_LEFT, -1);
-    actions.bind(Action::LEFT,      GamepadAxis::LEFT_STICK_X);
+    actions.bind(Action::LEFT,      InputControl::key(Key::A), -1);
+    actions.bind(Action::LEFT,      InputControl::key(Key::LEFT), -1);
+    actions.bind(Action::LEFT,      InputControl::gamepadButton(GamepadButton::D_PAD_LEFT), -1);
+    actions.bind(Action::LEFT,      InputControl::gamepadAxis(GamepadAxis::LEFT_STICK_X));
 
     // +1 for backwards
-    actions.bind(Action::BACKWARD,  Key::S);
-    actions.bind(Action::BACKWARD,  Key::DOWN);
-    actions.bind(Action::BACKWARD,  GamepadButton::D_PAD_DOWN);
-    actions.bind(Action::BACKWARD,  GamepadAxis::LEFT_STICK_Y);
+    actions.bind(Action::BACKWARD,  InputControl::key(Key::S));
+    actions.bind(Action::BACKWARD,  InputControl::key(Key::DOWN));
+    actions.bind(Action::BACKWARD,  InputControl::gamepadButton(GamepadButton::D_PAD_DOWN));
+    actions.bind(Action::BACKWARD,  InputControl::gamepadAxis(GamepadAxis::LEFT_STICK_Y));
 
     // +1 for right
-    actions.bind(Action::RIGHT,     Key::D);
-    actions.bind(Action::RIGHT,     Key::RIGHT);
-    actions.bind(Action::RIGHT,     GamepadButton::D_PAD_RIGHT);
-    actions.bind(Action::RIGHT,     GamepadAxis::LEFT_STICK_X);
+    actions.bind(Action::RIGHT,     InputControl::key(Key::D));
+    actions.bind(Action::RIGHT,     InputControl::key(Key::RIGHT));
+    actions.bind(Action::RIGHT,     InputControl::gamepadButton(GamepadButton::D_PAD_RIGHT));
+    actions.bind(Action::RIGHT,     InputControl::gamepadAxis(GamepadAxis::LEFT_STICK_X));
 
     // No direct scale needed from here
-    actions.bind(Action::JUMP,      Key::SPACE);
-    actions.bind(Action::JUMP,      MouseButton::RIGHT);
-    actions.bind(Action::JUMP,      GamepadButton::A);
+    actions.bind(Action::JUMP,      InputControl::key(Key::SPACE));
+    actions.bind(Action::JUMP,      InputControl::gamepadButton(GamepadButton::A));
 
-    actions.bind(Action::QUIT,      Key::Q);
-    actions.bind(Action::QUIT,      GamepadButton::START);
+    actions.bind(Action::QUIT,      InputControl::key(Key::Q));
+    actions.bind(Action::QUIT,      InputControl::gamepadButton(GamepadButton::START));
 
     conduit::real deadzone = 0.5;
 

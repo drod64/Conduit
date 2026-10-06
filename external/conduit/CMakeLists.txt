@@ -30,6 +30,7 @@ set(
     src/input/mouse/MouseState.cpp
 
     src/input/Input.cpp
+    src/input/InputControl.cpp
 
     src/tests/InputTester.cpp
 

@@ -139,13 +139,34 @@ public:
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding) const
 {
-    return std::visit(
-        [this, &binding](const auto& control)
-        {
-            return evaluate(control) * binding.scale;
-        },
-        binding.control
-    );
+    uint32 binding_value = binding.control.value();
+
+    real value = 0;
+
+    switch (binding.control.type())
+    {
+        case InputControlType::GAMEPAD_AXIS:
+            value = evaluate(static_cast<GamepadAxis>(binding_value));
+            break;
+        
+        case InputControlType::GAMEPAD_BUTTON:
+            value = evaluate(static_cast<GamepadButton>(binding_value));
+            break;
+
+        case InputControlType::KEY:
+            value = evaluate(static_cast<Key>(binding_value));
+            break;
+
+        case InputControlType::MOUSE_BUTTON:
+            value = evaluate(static_cast<MouseButton>(binding_value));
+            break;
+
+        default:
+            value = 0;
+            break;
+    }
+
+    return value * binding.scale;
 }
 
 template <typename Action>
