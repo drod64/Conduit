@@ -4,8 +4,7 @@
 #include <cstdlib>
 #include <conduit/core/containers/unordered_map.hpp>
 #include <conduit/core/containers/vector.hpp>
-#include <conduit/input/ActionState.hpp>
-#include <conduit/input/Binding.hpp>
+#include <conduit/input/ActionEntry.hpp>
 #include <conduit/input/Input.hpp>
 
 namespace conduit {
@@ -17,8 +16,9 @@ class ActionMap {
 private:
     const Input&                                m_input;
     sizet                                       m_gamepad{};
-    unordered_map<Action, vector<Binding>>      m_bindings{};
-    unordered_map<Action, ActionState>          m_action_states{};
+    unordered_map<Action, sizet>                m_action_to_id{};
+    unordered_map<sizet, Action>                m_id_to_action{};
+    vector<ActionEntry>                         m_action_entries{};
 
     /**
      * Helper function that evaluates a binding.
@@ -205,14 +205,14 @@ m_gamepad(gamepad)
 template <typename Action>
 inline void conduit::ActionMap<Action>::poll()
 {
-    for (const auto &[action, bindings] : m_bindings)
+    for (ActionEntry &action_entry : m_action_entries)
     {
-        ActionState &action_state = m_action_states[action];
+        ActionState &action_state = action_entry.state;
 
         action_state.previous = action_state.current;
         action_state.current = static_cast<real>(0);
 
-        for (const Binding &binding : bindings)
+        for (const Binding &binding : action_entry.bindings)
         {
             action_state.current += evaluate(binding);
         }
@@ -224,35 +224,86 @@ inline void conduit::ActionMap<Action>::poll()
 template <typename Action>
 inline bool conduit::ActionMap<Action>::isDown(Action action) const
 {
-    const ActionState &action_state = m_action_states.at(action);
-    return action_state.current != static_cast<real>(0);
+    auto it = m_action_to_id.find(action);
+
+    if (it != m_action_to_id.end())
+    {
+        const sizet ID = *it;
+
+        const ActionEntry& entry = m_action_entries[ID];
+
+        return entry.state.current != 0;
+    }
+
+    return false;
 }
 
 template <typename Action>
 inline bool conduit::ActionMap<Action>::wasPressed(Action action) const
 {
-    const ActionState &action_state = m_action_states.at(action);
-    return action_state.previous == 0 && action_state.current != 0;
+    auto it = m_action_to_id.find(action);
+
+    if (it != m_action_to_id.end())
+    {
+        const sizet ID = it->second;
+
+        const ActionEntry& entry = m_action_entries.at(ID);
+
+        return entry.state.previous == 0 && entry.state.current != 0;
+    }
+
+    return false;
 }
 
 template <typename Action>
 inline bool conduit::ActionMap<Action>::wasReleased(Action action) const
 {
-    const ActionState &action_state = m_action_states.at(action);
-    return action_state.previous != 0 && action_state.current == 0;
+    auto it = m_action_to_id.find(action);
+
+    if (it != m_action_to_id.end())
+    {
+        const sizet ID = it->second;
+
+        const ActionEntry& entry = m_action_entries.at(ID);
+
+        return entry.state.previous != 0 && entry.state.current == 0;
+    }
+
+    return false;
 }
 
 template <typename Action>
 inline conduit::real conduit::ActionMap<Action>::value(Action action) const
 {
-    const ActionState &action_state = m_action_states.at(action);
-    return action_state.current;
+    auto it = m_action_to_id.find(action);
+
+    if (it != m_action_to_id.end())
+    {
+        const sizet ID = it->second;
+
+        const ActionEntry& entry = m_action_entries.at(ID);
+
+        return entry.state.current;
+    }
+
+    return 0;
 }
 
 template <typename Action>
 void conduit::ActionMap<Action>::bind(Action action, const Binding &binding)
 {
-    m_bindings[action].push_back(binding);
+    auto it = m_action_to_id.find(action);
+    
+    if (it == m_action_to_id.end())
+    {
+        const sizet ID = m_action_entries.size();
+        m_action_to_id[action]  = ID;
+        m_id_to_action[ID]      = action;
+        m_action_entries.push_back(ActionEntry());
+    }
+
+    const sizet ID = m_action_to_id[action];
+    m_action_entries[ID].bindings.push_back(binding);
 }
 
 template <typename Action>
@@ -264,13 +315,40 @@ void conduit::ActionMap<Action>::bind(Action action, InputControl inputControl, 
 template <typename Action>
 void conduit::ActionMap<Action>::unbind(Action action, const Binding &binding)
 {
-    auto &bindings = m_bindings[action];
+    auto it = m_action_to_id.find(action);
 
-    auto it = std::erase_if(bindings, [&binding](const Binding &b) -> bool {
-        return b.control == binding.control;
-    });
+    if (it == m_action_to_id.end()) return;
 
-    bindings.erase(it);
+    const size_t TARGET_ID = it->second;
+    auto& entry = m_action_entries[TARGET_ID];
+
+    // Remove the requested binding.
+    auto bindingIt = std::find(entry.bindings.begin(), entry.bindings.end(), entry.bindings);
+
+    if (bindingIt == entry.bindings.end()) return;
+
+    *bindingIt = std::move(entry.bindings.back());
+    entry.bindings.pop_back();
+
+    // Keep the action if it still has bindings.
+    if (!entry.bindings.empty()) return;
+
+    // Action has no bindings left, so remove the action itself.
+    const size_t LAST_ID = m_action_entries.size() - 1;
+
+    if (TARGET_ID != LAST_ID)
+    {
+        m_action_entries[TARGET_ID] = std::move(m_action_entries[LAST_ID]);
+
+        const Action movedAction = m_id_to_action[LAST_ID];
+
+        m_id_to_action[TARGET_ID] = movedAction;
+        m_action_to_id[movedAction] = TARGET_ID;
+    }
+
+    m_action_entries.pop_back();
+    m_id_to_action.erase(LAST_ID);
+    m_action_to_id.erase(action);
 }
 
 #endif // CONDUIT_ACTION_MAP_HPP
