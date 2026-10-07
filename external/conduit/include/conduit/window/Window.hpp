@@ -23,6 +23,8 @@ private:
     platform::Window m_platform_window;
 
 public:
+    Window() = default;
+
     /**
      * Parameterized constructor.
      * 
@@ -31,6 +33,11 @@ public:
      * @param title the title of the window
      */
     Window(uint32 width, uint32 height, const char *title);
+
+    Window(const Window &other) = delete;
+    Window operator= (const Window &other) = delete;
+    Window(Window &&other) noexcept;
+    Window& operator=(Window &&other) noexcept;
 
     ~Window() = default;
 
@@ -79,7 +86,7 @@ public:
     /**
      * @return true if the window is minimized, false otherwsie
      */
-    bool isMinimized() const;
+    bool isMinimized() const;;
 }; // class Window
 } // namespace conduit
 

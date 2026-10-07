@@ -4,9 +4,9 @@ void conduit::InputTester::test()
 {
     conduit::platform::initialize();
 
-    conduit::Window window(100, 100, "Conduit Input Tester.");
+    m_window = conduit::Window(100, 100, "Conduit Input Tester.");
     
-    conduit::Input input(window);
+    conduit::Input input(m_window);
 
     conduit::ActionMap<Action> actions(input, 0);
 
@@ -34,7 +34,7 @@ void conduit::InputTester::test()
     actions.bind(Action::RIGHT,     InputControl::gamepadButton(GamepadButton::D_PAD_RIGHT));
     actions.bind(Action::RIGHT,     InputControl::gamepadAxis(GamepadAxis::LEFT_STICK_X));
 
-    // No direct scale needed from here
+    // No direction scale needed from here
     actions.bind(Action::JUMP,      InputControl::key(Key::SPACE));
     actions.bind(Action::JUMP,      InputControl::gamepadButton(GamepadButton::A));
 
@@ -44,10 +44,10 @@ void conduit::InputTester::test()
     conduit::real deadzone = 0.5;
 
     // Simple loop to poll input
-    while (!window.shouldClose())
+    while (!m_window.shouldClose())
     {
         // Poll events.
-        window.pollEvents();
+        m_window.pollEvents();
 
         // Poll input.
         input.poll();
@@ -92,7 +92,7 @@ void conduit::InputTester::test()
 
         if (actions.wasReleased(Action::QUIT))
         {
-            window.close();
+            m_window.close();
         }
     }
 

@@ -8,6 +8,9 @@
 
 namespace conduit {
 class InputTester {
+private:
+    conduit::Window m_window;
+
 public:
     enum class Action : conduit::uint16 {
         FORWARD, BACKWARD, LEFT, RIGHT, JUMP, QUIT
