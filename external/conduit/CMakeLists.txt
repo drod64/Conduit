@@ -33,6 +33,7 @@ set(
     src/input/InputControl.cpp
 
     src/tests/InputTester.cpp
+    src/tests/IDTester.cpp
 
     src/window/Window.cpp
 )

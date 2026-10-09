@@ -1,10 +1,10 @@
 #include <iostream>
 #include <conduit/window/Window.hpp>
-#include <conduit/tests/InputTester.hpp>
+#include <conduit/tests/IDTester.hpp>
 
 int main()
 {
-    conduit::InputTester tester;
+    conduit::IDTester tester;
     tester.test();
     std::cout << "Hello World!\n";
     return 0;
