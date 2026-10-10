@@ -3,9 +3,9 @@
 #include <conduit/core/primitives.hpp>
 
 namespace conduit {
-template <typename Type>
+template <typename Type, typename IDType = uint32>
 struct TypeID {
-    uint32 value{};
+    IDType value{};
 }; // struct TypeID
 } // namespace conduit
 

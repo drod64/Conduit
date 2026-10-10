@@ -3,9 +3,16 @@
 #include <conduit/core/primitives.hpp>
 
 namespace conduit {
-template <typename Type>
+template <typename Type, typename IDType = uint32>
 struct GenID {
-    uint32 value{};
+    static constexpr GenID<Type, IDType> INVALID = GenID<Type, IDType>{};
+
+    IDType value{};
+
+    bool operator==(GenID<Type, IDType> other) const
+    {
+        return value == other.value;
+    }
 }; // struct GenID
 } // namespace conduit
 

@@ -4,17 +4,17 @@
 #include <atomic>
 
 namespace conduit {
-template <typename Category>
+template <typename Category, typename IDType = uint32>
 class TypeIDGenerator {
 private:
     /**
      * @return the next ID in the Category namespace
      */
-    static uint32 nextID()
+    static IDType nextID()
     {
-        static std::atomic<uint32> counter = {0};
+        static std::atomic<IDType> counter = {0};
 
-        return counter.fetch_add(1, std::memory_order_relaxed);
+        return counter.fetch_add(static_cast<IDType>(1), std::memory_order_relaxed);
     }
 
 public:
@@ -24,9 +24,9 @@ public:
      * @return the ID of the Type in the Category namespace
      */
     template <typename Type>
-    static TypeID<Category> get()
+    static TypeID<Category, IDType> get()
     {
-        static const uint32 ID = nextID();
+        static const IDType ID = nextID();
         return {ID};
     }
 }; // class TypeIDGenerator
