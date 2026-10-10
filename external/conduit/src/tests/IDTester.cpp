@@ -31,13 +31,14 @@ void conduit::IDTester::testTypeIDs()
 
 void conduit::IDTester::testGenIDs()
 {
+    
     struct EntityTag{};
 
     using EntityManager = GenIDGenerator<EntityTag, uint64, 1>;
     using Entity        = GenID<EntityTag, uint64>;
-
     EntityManager manager;
 
+    // Test multiple creation calls.
     Entity e0 = manager.createID();
     Entity e1 = manager.createID();
     Entity e2 = manager.createID();
@@ -47,6 +48,7 @@ void conduit::IDTester::testGenIDs()
         assert(e2 == Entity::INVALID);
     }
 
+    // Destroy IDs.
     manager.destroyID(e0);
     manager.destroyID(e1);
     manager.destroyID(e2);
@@ -56,14 +58,16 @@ void conduit::IDTester::testGenIDs()
         assert(!manager.isValid(e2));
     }
 
+    // Test next expected value (according to a 1 bit allocated index and allocation of 63 bits for generation).
     e0 = manager.createID();
     {
         assert(e0.value == 3);
     }
     manager.destroyID(e0);
 
-    conduit::sizet iterations = 1'000'000;
-    for (conduit::sizet i = 0; i < iterations; ++i)
+    // Test life-cycle.
+    sizet iterations = 1'000'000;
+    for (sizet i = 0; i < iterations; ++i)
     {
         Entity id = manager.createID();
 
@@ -72,6 +76,30 @@ void conduit::IDTester::testGenIDs()
         manager.destroyID(id);
 
         assert(!manager.isValid(id));
+    }
+
+    // For overflow testing, explicitly set the generation to it's max valid value.
+    const uint64 MAX_GENERATION = (uint64{1} << uint64{63}) - uint64{1};
+    manager.setGeneration(1, MAX_GENERATION);
+
+    // Create new ID and ensure the max generation value is valid.
+    Entity maxID = manager.createID();
+    {
+        assert(maxID.value == std::numeric_limits<uint64>::max());
+        assert(manager.isValid(maxID));
+    }
+
+    // Destroy ID. Index should now be retired.
+    manager.destroyID(maxID);
+
+    // With the index retired, we should get only invalid IDs for the next creation calls.
+    for (sizet i = 0; i < 1'000; ++i)
+    {
+        Entity invalidID = manager.createID();
+        {
+            assert(invalidID.value == 0);
+            assert(!manager.isValid(invalidID));
+        }
     }
 
     std::cout << "[IDTester]::testGenIDs() -> Passed...\n";

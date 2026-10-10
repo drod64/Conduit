@@ -27,16 +27,19 @@ private:
         TOTAL_BITS - IndexBits;
     static_assert(GENERATION_BITS <= std::numeric_limits<generation_type>::digits,
         "GenerationBits exceeds generation_type capacity");
+
     static constexpr packed_type INDEX_MASK =
-        (packed_type{1} << IndexBits) - 1;
+        (packed_type{1} << IndexBits) - packed_type{1};
+    static constexpr size_type MAX_CAPACITY =
+        (size_type{1} << IndexBits) - size_type{1};
+
     static constexpr packed_type GENERATION_MASK =
-        (packed_type{1} << GENERATION_BITS) - 1;
+        (packed_type{1} << GENERATION_BITS) - packed_type{1};
     static constexpr packed_type RETIRED_GENERATION =
         GENERATION_MASK + packed_type{1};
 
     vector<generation_type> m_generations{};
     vector<index_type>      m_free_indices{};
-    size_type               m_max_capacity = (size_type{1} << IndexBits) - size_type{1};
 
     static constexpr GenID<Category, IDType> pack(index_type index, generation_type generation);
 
@@ -59,6 +62,8 @@ public:
     void destroyID(GenID<Category, IDType> id);
 
     bool isValid(GenID<Category, IDType> id) const;
+    
+    void setGeneration(sizet index, generation_type generation);
 }; // class GenIDGenerator
 } // namespace conduit
 
@@ -122,7 +127,7 @@ inline conduit::GenID<Category, IDType> conduit::GenIDGenerator<Category, IDType
     }
     else
     {
-        if (m_generations.size() - 1 >= m_max_capacity)
+        if (m_generations.size() - 1 >= MAX_CAPACITY)
             return GenID<Category, IDType>::INVALID;
 
         index = static_cast<index_type>(m_generations.size());
@@ -165,6 +170,13 @@ inline bool conduit::GenIDGenerator<Category, IDType, IndexBits>::isValid(GenID<
 
     // Check if stored generation equals calculated generation.
     return m_generations[index] == generation;
+}
+
+template <typename Category, typename IDType, conduit::uint32 IndexBits>
+void conduit::GenIDGenerator<Category, IDType, IndexBits>::setGeneration(sizet index, generation_type generation)
+{
+    assert(index < m_generations.size());
+    m_generations[index] = generation;
 }
 
 #endif // CONDUIT_GEN_ID_GENERATOR_HPP
