@@ -1,11 +1,13 @@
 #include <conduit/tests/IDTester.hpp>
 #include <conduit/core/primitives.hpp>
 #include <iostream>
+#include <random>
 
 void conduit::IDTester::test()
 {
     testTypeIDs();
-    testGenIDs();
+    testGenIDs1();
+    testGenIDs2();
     std::cout << "[IDTester]::test() -> Passed all unit tests.\n";
 }
 
@@ -26,12 +28,11 @@ void conduit::IDTester::testTypeIDs()
     assert(timeID.value == 1);
     assert(audioID.value == 2);
 
-    std::cout << "[IDTester::testTypeIDs()] -> Passed...\n";
+    std::cout << "[IDTester]::testTypeIDs() -> Passed...\n";
 }
 
-void conduit::IDTester::testGenIDs()
+void conduit::IDTester::testGenIDs1()
 {
-    
     struct EntityTag{};
 
     using EntityManager = GenIDGenerator<EntityTag, uint64, 1>;
@@ -102,5 +103,99 @@ void conduit::IDTester::testGenIDs()
         }
     }
 
-    std::cout << "[IDTester]::testGenIDs() -> Passed...\n";
+    std::cout << "[IDTester]::testGenIDs1() -> Passed...\n";
+}
+
+void conduit::IDTester::testGenIDs2()
+{
+    struct ConstraintTag {};
+    using ConstraintManager = GenIDGenerator<ConstraintTag, uint64, 32>;
+    using ConstraintID      = GenID<ConstraintTag, uint64>;
+
+    ConstraintManager manager;
+
+    constexpr uint32 ITERATIONS = 10000;
+    constexpr size_t MAX_ALIVE_IDS = 256;
+
+    // Fixed seed makes failures reproducible.
+    std::mt19937_64 rng{0xC0FFEEULL};
+
+    std::vector<ConstraintID> aliveIDs;
+    std::vector<ConstraintID> staleIDs;
+
+    for (uint32 iteration = 0; iteration < ITERATIONS; ++iteration)
+    {
+        // Select an operation: create, destroy, validate, or stale destroy.
+        std::uniform_int_distribution<uint32> operationDist(0, 99);
+        const uint32 operation = operationDist(rng);
+
+        if (operation < 40 && aliveIDs.size() < MAX_ALIVE_IDS)
+        {
+            // Create an ID.
+            ConstraintID id = manager.createID();
+
+            assert(manager.isValid(id));
+
+            // Previously destroyed IDs must not become valid again.
+            for (const ConstraintID staleID : staleIDs)
+                assert(!manager.isValid(staleID));
+
+            aliveIDs.push_back(id);
+        }
+        else if (operation < 75 && !aliveIDs.empty())
+        {
+            // Destroy a randomly selected live ID.
+            std::uniform_int_distribution<size_t> indexDist(
+                0, aliveIDs.size() - 1);
+
+            const size_t selected = indexDist(rng);
+            const ConstraintID id = aliveIDs[selected];
+
+            manager.destroyID(id);
+
+            assert(!manager.isValid(id));
+
+            staleIDs.push_back(id);
+            aliveIDs.erase(aliveIDs.begin() + selected);
+        }
+        else if (operation < 95)
+        {
+            // Validate every currently live ID.
+            for (const ConstraintID id : aliveIDs)
+                assert(manager.isValid(id));
+        }
+        else if (!staleIDs.empty())
+        {
+            // Occasionally attempt to destroy an already stale ID.
+            std::uniform_int_distribution<size_t> indexDist(
+                0, staleIDs.size() - 1);
+
+            const ConstraintID id = staleIDs[indexDist(rng)];
+
+            manager.destroyID(id);
+            assert(!manager.isValid(id));
+        }
+
+        // Periodically verify all lifecycle invariants.
+        if (iteration % 100 == 0)
+        {
+            for (const ConstraintID id : aliveIDs)
+                assert(manager.isValid(id));
+
+            for (const ConstraintID id : staleIDs)
+                assert(!manager.isValid(id));
+        }
+    }
+
+    // Final cleanup.
+    for (const ConstraintID id : aliveIDs)
+    {
+        manager.destroyID(id);
+        assert(!manager.isValid(id));
+    }
+
+    for (const ConstraintID id : staleIDs)
+        assert(!manager.isValid(id));
+
+    std::cout << "[IDTester]::testGenIDs2() -> Passed...\n";
 }

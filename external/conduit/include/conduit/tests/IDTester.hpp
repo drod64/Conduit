@@ -11,7 +11,9 @@ public:
 private:
     void testTypeIDs();
 
-    void testGenIDs();
+    void testGenIDs1();
+
+    void testGenIDs2();
 }; // class IDTester
 } // namespace conduit
 
