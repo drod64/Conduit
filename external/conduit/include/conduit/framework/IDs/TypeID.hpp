@@ -6,6 +6,11 @@ namespace conduit {
 template <typename Type, typename IDType = uint32>
 struct TypeID {
     IDType value{};
+
+    bool operator==(TypeID<Type, IDType> other) const
+    {
+        return value == other.value;
+    }
 }; // struct TypeID
 } // namespace conduit
 
