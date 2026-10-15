@@ -19,7 +19,6 @@ namespace conduit {
 
     using entity = entt::entity;
     constexpr entity null_entity = entt::null;
-
 } // namespace conduit
 
 #endif // CONDUIT_PRIMITIVES_HPP
