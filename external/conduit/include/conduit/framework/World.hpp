@@ -9,9 +9,6 @@ class World {
 private:
     // &engine
     entt::registry          m_registry;
-    entt::organizer         m_scheduler;
-    entt::dispatcher        m_events;
-    // commandBuffer
 
 public:
     World() = default;
@@ -33,6 +30,9 @@ public:
     template <typename T, typename... Args>
     T& replaceComponent(const entt::entity entity, Args&&... args);
 
+    template <typename... T>
+    bool hasComponents(const entt::entity entity) const;
+
     template <typename T>
     void removeComponent(const entt::entity entity);
 
@@ -51,8 +51,11 @@ public:
     template <typename T>
     [[nodiscard]] const T* tryGetComponent(const entt::entity entity) const;
 
+    template <typename T>
+    [[nodiscard]] auto& getPool();
+
     template <typename T, typename... Other, typename... Exclude>
-    auto view();
+    [[nodiscard]] auto view();
 
     [[nodiscard]] bool isOrphan(const entt::entity entity) const;
 
@@ -81,7 +84,6 @@ public:
 
     template <typename T>
     T& insertOrAssignContext(T&& value);
-
 }; // class World
 } // namespace conduit
 
@@ -113,6 +115,12 @@ template <typename T, typename... Args>
 inline T& conduit::World::replaceComponent(const entt::entity entity, Args&&... args)
 {
     return m_registry.replace<T>(entity, std::forward<Args>(args)...);
+}
+
+template <typename... T>
+inline bool conduit::World::hasComponents(const entt::entity entity) const
+{
+    return m_registry.all_of<T...>(entity);
 }
 
 template <typename T>
@@ -149,6 +157,12 @@ template <typename T>
 inline const T* conduit::World::tryGetComponent(const entt::entity entity) const
 {
     return m_registry.try_get<T>(entity);
+}
+
+template <typename T>
+inline auto& conduit::World::getPool()
+{
+    return m_registry.storage<T>();
 }
 
 template <typename T, typename... Other, typename... Exclude>

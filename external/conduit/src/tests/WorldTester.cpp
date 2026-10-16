@@ -16,7 +16,7 @@ void conduit::WorldTester::testRegistry()
 
     actionMap.bind("spawn entity",      Binding(InputControl::mouseButton(MouseButton::LEFT)));
     actionMap.bind("loop entities",     Binding(InputControl::key(Key::LEFT_SHIFT)));
-    actionMap.bind("clear world",       Binding(InputControl::key(Key::DELETE)));
+    actionMap.bind("clear world",       Binding(InputControl::key(Key::BACKSPACE)));
     actionMap.bind("quit",              Binding(InputControl::key(Key::ESCAPE)));
 
     while (!m_window.shouldClose())
@@ -37,6 +37,11 @@ void conduit::WorldTester::testRegistry()
                 std::cout << "Position: " << "(" << pos.x << ", " << pos.y << ")\n";
                 std::cout << "Velocity: " << "(" << vel.y << ", " << vel.y << ")\n"; 
             });
+        }
+
+        if (actionMap.wasPressed("clear world"))
+        {
+            m_world.clear();
         }
 
         if (actionMap.wasPressed("quit"))
