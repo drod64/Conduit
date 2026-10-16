@@ -34,6 +34,7 @@ set(
 
     src/tests/InputTester.cpp
     src/tests/IDTester.cpp
+    src/tests/WorldTester.cpp
 
     src/window/Window.cpp
 )
