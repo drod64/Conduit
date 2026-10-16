@@ -6,9 +6,13 @@ void conduit::InputTester::test()
 
     m_window = conduit::Window(100, 100, "Conduit Input Tester.");
     
-    conduit::Input input(m_window);
-
-    conduit::ActionMap<Action> actions(input, 0);
+    // Testing default constructors and move operators.
+    conduit::Input input;
+    conduit::ActionMap<Action> actions;
+    
+    conduit::Input inputToBeMoved(m_window);
+    input = std::move(inputToBeMoved);
+    actions = conduit::ActionMap<Action>(input);
 
     // -1 for forwards
     actions.bind(Action::FORWARD,   InputControl::key(Key::W), -1);

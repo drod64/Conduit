@@ -1,8 +1,34 @@
 #include <conduit/input/Input.hpp>
 
-conduit::Input::Input(const conduit::Window &window) :
-m_window(window)
-{}
+conduit::Input::Input(Input&& other)
+{
+    m_window = other.m_window;
+    other.m_window = nullptr;
+
+    m_gamepad_states    = std::move(other.m_gamepad_states);
+    m_keyboard_state    = std::move(other.m_keyboard_state);
+    m_mouse_state       = std::move(other.m_mouse_state);
+}
+
+conduit::Input& conduit::Input::operator=(Input&& other)
+{
+    if (this != &other)
+    {
+        m_window = other.m_window;
+        other.m_window = nullptr;
+    
+        m_gamepad_states    = std::move(other.m_gamepad_states);
+        m_keyboard_state    = std::move(other.m_keyboard_state);
+        m_mouse_state       = std::move(other.m_mouse_state);
+    }
+
+    return *this;
+}
+
+conduit::Input::Input(const conduit::Window &window)
+{
+    m_window = &window;
+}
 
 const conduit::KeyboardState& conduit::Input::keyboard() const
 {
@@ -36,5 +62,6 @@ conduit::GamepadStates& conduit::Input::gamepads()
 
 void conduit::Input::poll()
 {
-    conduit::platform::input::poll(m_window.m_platform_window, *this);
+    assert(m_window && "[conduit::Input]: Error. Uninitialized Input object. Try assigning a conduit::Window to it.");
+    conduit::platform::input::poll(m_window->m_platform_window, *this);
 }

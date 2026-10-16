@@ -16,7 +16,7 @@ namespace conduit {
 template <typename Action>
 class ActionMap {
 private:
-    const Input&                                m_input;
+    const Input*                                m_input = nullptr;
     sizet                                       m_gamepad{};
     unordered_map<Action, sizet>                m_action_to_id{};
     unordered_map<sizet, Action>                m_id_to_action{};
@@ -68,6 +68,15 @@ private:
     real evaluate(MouseButton mouseButton) const;
 
 public:
+    ActionMap() = default;
+    ~ActionMap() = default;
+
+    ActionMap(const ActionMap &other) = delete;
+    ActionMap& operator=(const ActionMap &other) = delete;
+
+    ActionMap(ActionMap&& other);
+    ActionMap& operator=(ActionMap&& other);
+
     /**
      * Parameterized constructor.
      * 
@@ -75,7 +84,6 @@ public:
      * @param gamepad an optional index to query a specific gamepad
      */
     ActionMap(const Input &input, sizet gamepad = 0);
-    ~ActionMap() = default;
 
     /**
      * Polls the stored conduit::Input to update the action states.
@@ -174,39 +182,71 @@ conduit::real conduit::ActionMap<Action>::evaluate(const Binding &binding) const
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(GamepadAxis gamepadAxis) const
 {
-    return m_input.gamepads()[m_gamepad].axisValue(gamepadAxis);
+    return m_input->gamepads()[m_gamepad].axisValue(gamepadAxis);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(GamepadButton gamepadButton) const
 {
-    return (m_input.gamepads()[m_gamepad].isDown(gamepadButton)) ?
+    return (m_input->gamepads()[m_gamepad].isDown(gamepadButton)) ?
             static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(Key key) const
 {
-    return (m_input.keyboard().isDown(key)) ?
+    return (m_input->keyboard().isDown(key)) ?
         static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
 conduit::real conduit::ActionMap<Action>::evaluate(MouseButton mouseButton) const
 {
-    return (m_input.mouse().isDown(mouseButton)) ?
+    return (m_input->mouse().isDown(mouseButton)) ?
         static_cast<real>(1) : static_cast<real>(0);
 }
 
 template <typename Action>
-inline conduit::ActionMap<Action>::ActionMap(const Input &input, sizet gamepad) :
-m_input(input),
-m_gamepad(gamepad)
-{}
+inline conduit::ActionMap<Action>::ActionMap(ActionMap&& other)
+{
+    m_input = other.m_input;
+    other.m_input = nullptr;
+
+    m_action_entries    = std::move(other.m_action_entries);
+    m_action_to_id      = std::move(other.m_action_to_id);
+    m_gamepad           = other.m_gamepad;
+    m_id_to_action      = std::move(other.m_id_to_action);
+}
+
+template <typename Action>
+inline conduit::ActionMap<Action>& conduit::ActionMap<Action>::operator=(ActionMap&& other)
+{
+    if (this != &other)
+    {
+        m_input = other.m_input;
+        other.m_input = nullptr;
+    
+        m_action_entries    = std::move(other.m_action_entries);
+        m_action_to_id      = std::move(other.m_action_to_id);
+        m_gamepad           = std::move(other.m_gamepad);
+        m_id_to_action      = std::move(other.m_id_to_action);
+    }
+
+    return *this;
+}
+
+template <typename Action>
+inline conduit::ActionMap<Action>::ActionMap(const Input &input, sizet gamepad)
+{
+    m_input = &input;
+    m_gamepad = gamepad;
+}
 
 template <typename Action>
 inline void conduit::ActionMap<Action>::poll()
 {
+    assert(m_input && "[conduit::ActionMap<Action>]: Error. ActionMap<Action> uninitialized. Try assigning a conduit::Input to it.");
+
     for (ActionEntry &action_entry : m_action_entries)
     {
         ActionState &action_state = action_entry.state;

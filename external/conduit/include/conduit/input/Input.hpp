@@ -11,12 +11,21 @@ namespace conduit {
  */
 class Input {
 private:
-    const conduit::Window                      &m_window;
+    const conduit::Window*                      m_window = nullptr;
     KeyboardState                               m_keyboard_state{};
     MouseState                                  m_mouse_state{};
     GamepadStates                               m_gamepad_states{};
 
 public:
+    Input() = default;
+    ~Input() = default;
+
+    Input(const Input &other) = delete;
+    Input& operator=(const Input &other) = delete;
+
+    Input(Input&& other);
+    Input& operator=(Input&& other);
+
     /**
      * Parameterized constructor.
      * 
@@ -26,7 +35,6 @@ public:
      * @param window the window to link the Input to
      */
     Input(const conduit::Window &window);
-    ~Input() = default;
 
     /**
      * @return the state of the keyboard for the current frame
