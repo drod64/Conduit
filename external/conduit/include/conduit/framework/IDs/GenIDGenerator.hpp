@@ -2,6 +2,7 @@
 #define CONDUIT_GEN_ID_GENERATOR_HPP
 #include <conduit/framework/IDs/GenID.hpp>
 #include <conduit/core/containers/vector.hpp>
+#include <cassert>
 
 namespace conduit {
 template <typename Category, typename IDType = uint32, uint32 IndexBits = 20>

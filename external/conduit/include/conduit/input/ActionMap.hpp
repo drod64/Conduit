@@ -2,6 +2,8 @@
 #define CONDUIT_ACTION_MAP_HPP
 #include <cassert>
 #include <cstdlib>
+#include <algorithm>
+#include <cmath>
 #include <conduit/core/containers/unordered_map.hpp>
 #include <conduit/core/containers/vector.hpp>
 #include <conduit/input/ActionEntry.hpp>

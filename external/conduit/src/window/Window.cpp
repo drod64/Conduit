@@ -1,4 +1,5 @@
 #include <conduit/window/Window.hpp>
+#include <algorithm>
 
 conduit::Window::Window(uint32 width, uint32 height, const char *title) :
 m_platform_window(width, height, title)

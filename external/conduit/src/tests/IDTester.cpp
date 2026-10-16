@@ -2,6 +2,7 @@
 #include <conduit/core/primitives.hpp>
 #include <iostream>
 #include <random>
+#include <cassert>
 
 void conduit::IDTester::test()
 {
